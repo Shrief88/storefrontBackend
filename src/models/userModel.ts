@@ -6,13 +6,13 @@ dotenv.config();
 const { BCRYPT_PASSWORD, SALT_ROUNDS } = process.env;
 
 export interface User {
-  id: number;
-  firstName: string;
-  lastName: string;
+  id?: number;
+  first_name: string;
+  last_name: string;
   password: string;
 }
 
-export class User {
+export class UserStore {
   async index(): Promise<User[]> {
     try {
       const conn = await clinet.connect();
@@ -41,12 +41,16 @@ export class User {
     try {
       const conn = await clinet.connect();
       const sql =
-        "INSERT INTO users (firstName,lastName,password) VALUES ($1,$2,$3) RETURNING *";
+        "INSERT INTO users (first_name,last_name,password) VALUES ($1,$2,$3) RETURNING *";
       const hash = bcrypt.hashSync(
         user.password + (BCRYPT_PASSWORD as string),
         parseInt(SALT_ROUNDS as string)
       );
-      const res = await conn.query(sql, [user.firstName, user.lastName, hash]);
+      const res = await conn.query(sql, [
+        user.first_name,
+        user.last_name,
+        hash,
+      ]);
       conn.release();
       return res.rows[0];
     } catch (err) {

@@ -39,16 +39,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.UserStore = void 0;
 var database_1 = __importDefault(require("../database"));
 var bcrypt_1 = __importDefault(require("bcrypt"));
 var dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 var _a = process.env, BCRYPT_PASSWORD = _a.BCRYPT_PASSWORD, SALT_ROUNDS = _a.SALT_ROUNDS;
-var User = /** @class */ (function () {
-    function User() {
+var UserStore = /** @class */ (function () {
+    function UserStore() {
     }
-    User.prototype.index = function () {
+    UserStore.prototype.index = function () {
         return __awaiter(this, void 0, void 0, function () {
             var conn, sql, res, err_1;
             return __generator(this, function (_a) {
@@ -72,7 +72,7 @@ var User = /** @class */ (function () {
             });
         });
     };
-    User.prototype.show = function (id) {
+    UserStore.prototype.show = function (id) {
         return __awaiter(this, void 0, void 0, function () {
             var conn, sql, res, err_2;
             return __generator(this, function (_a) {
@@ -96,7 +96,7 @@ var User = /** @class */ (function () {
             });
         });
     };
-    User.prototype.create = function (user) {
+    UserStore.prototype.create = function (user) {
         return __awaiter(this, void 0, void 0, function () {
             var conn, sql, hash, res, err_3;
             return __generator(this, function (_a) {
@@ -106,9 +106,13 @@ var User = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = "INSERT INTO users (firstName,lastName,password) VALUES ($1,$2,$3) RETURNING *";
+                        sql = "INSERT INTO users (first_name,last_name,password) VALUES ($1,$2,$3) RETURNING *";
                         hash = bcrypt_1.default.hashSync(user.password + BCRYPT_PASSWORD, parseInt(SALT_ROUNDS));
-                        return [4 /*yield*/, conn.query(sql, [user.firstName, user.lastName, hash])];
+                        return [4 /*yield*/, conn.query(sql, [
+                                user.first_name,
+                                user.last_name,
+                                hash,
+                            ])];
                     case 2:
                         res = _a.sent();
                         conn.release();
@@ -121,6 +125,6 @@ var User = /** @class */ (function () {
             });
         });
     };
-    return User;
+    return UserStore;
 }());
-exports.User = User;
+exports.UserStore = UserStore;
