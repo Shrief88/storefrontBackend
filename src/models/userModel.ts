@@ -69,4 +69,28 @@ export class UserStore {
       throw new Error(`could not create new user. ${err}`);
     }
   }
+
+  async authenticate(email: string, password: string): Promise<User> {
+    try {
+      const conn = await clinet.connect();
+      const sql = "SELECT * FROM users WHERE email=$1";
+      const res = await conn.query(sql, [email]);
+      if (res.rowCount === 0) {
+        throw new Error("no such email exist");
+      }
+
+      if (
+        !bcrypt.compareSync(
+          password + (BCRYPT_PASSWORD as string),
+          res.rows[0].password
+        )
+      ) {
+        throw new Error("Invalid password");
+      }
+      conn.release();
+      return res.rows[0];
+    } catch (err) {
+      throw new Error(`could not sign in. ${err}`);
+    }
+  }
 }

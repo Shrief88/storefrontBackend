@@ -137,6 +137,35 @@ var UserStore = /** @class */ (function () {
             });
         });
     };
+    UserStore.prototype.authenticate = function (email, password) {
+        return __awaiter(this, void 0, void 0, function () {
+            var conn, sql, res, err_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, database_1.default.connect()];
+                    case 1:
+                        conn = _a.sent();
+                        sql = "SELECT * FROM users WHERE email=$1";
+                        return [4 /*yield*/, conn.query(sql, [email])];
+                    case 2:
+                        res = _a.sent();
+                        if (res.rowCount === 0) {
+                            throw new Error("no such email exist");
+                        }
+                        if (!bcrypt_1.default.compareSync(password + BCRYPT_PASSWORD, res.rows[0].password)) {
+                            throw new Error("Invalid password");
+                        }
+                        return [2 /*return*/, res.rows[0]];
+                    case 3:
+                        err_4 = _a.sent();
+                        throw new Error("could not create new user. ".concat(err_4));
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
     return UserStore;
 }());
 exports.UserStore = UserStore;

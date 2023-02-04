@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import userRoutes from "./handlers/userHandle";
+import userRoutes from "./handlers/userHandler";
 
 const app = express();
 const port = 3000;
@@ -16,3 +16,5 @@ app.get("/", (req: express.Request, res: express.Response) => {
 app.listen(port, host, () => {
   console.log(`app is rurnning on http://${host}:${port}`);
 });
+
+export default app;

@@ -2,6 +2,11 @@ import { type RequestHandler, type Request, type Response } from "express";
 import type express from "express";
 import { type User, UserStore } from "../models/userModel";
 import { validateEmail } from "../utilities/emailValidation";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
+const { TOKEN_SECRET } = process.env;
 
 const store = new UserStore();
 
@@ -54,10 +59,21 @@ const create = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const authenticate = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const user = await store.authenticate(req.body.email, req.body.password);
+    const token = jwt.sign({ user }, TOKEN_SECRET as string);
+    res.json(token);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
 const userRoutes = (app: express.Application): void => {
   app.get("/users", index as RequestHandler);
   app.post("/users", create as RequestHandler);
   app.get("/users/:id", show as RequestHandler);
+  app.post("/users/authentiacte", authenticate as RequestHandler);
 };
 
 export default userRoutes;
