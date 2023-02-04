@@ -43,6 +43,7 @@ var userModel_1 = require("../models/userModel");
 var emailValidation_1 = require("../utilities/emailValidation");
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var dotenv_1 = __importDefault(require("dotenv"));
+var verifyAuthToken_1 = __importDefault(require("../middlewares/verifyAuthToken"));
 dotenv_1.default.config();
 var TOKEN_SECRET = process.env.TOKEN_SECRET;
 var store = new userModel_1.UserStore();
@@ -124,23 +125,29 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
     });
 }); };
 var authenticate = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, token;
+    var user, token, err_4;
     return __generator(this, function (_a) {
-        try {
-            user = store.authenticate(req.body.email, req.body.password);
-            token = jsonwebtoken_1.default.sign({ user: user }, TOKEN_SECRET);
-            res.json(token);
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, store.authenticate(req.body.email, req.body.password)];
+            case 1:
+                user = _a.sent();
+                token = jsonwebtoken_1.default.sign({ user: user }, TOKEN_SECRET);
+                res.json(token);
+                return [3 /*break*/, 3];
+            case 2:
+                err_4 = _a.sent();
+                res.status(400).json({ error: err_4.message });
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
-        catch (err) {
-            res.status(400).json({ error: err.message });
-        }
-        return [2 /*return*/];
     });
 }); };
 var userRoutes = function (app) {
-    app.get("/users", index);
-    app.post("/users", create);
-    app.get("/users/:id", show);
-    app.post("/users/authentiacte", authenticate);
+    app.get("/users", verifyAuthToken_1.default, index);
+    app.post("/users", verifyAuthToken_1.default, create);
+    app.get("/users/:id", verifyAuthToken_1.default, show);
+    app.post("/users/authentiacate", authenticate);
 };
 exports.default = userRoutes;

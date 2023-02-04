@@ -157,10 +157,11 @@ var UserStore = /** @class */ (function () {
                         if (!bcrypt_1.default.compareSync(password + BCRYPT_PASSWORD, res.rows[0].password)) {
                             throw new Error("Invalid password");
                         }
+                        conn.release();
                         return [2 /*return*/, res.rows[0]];
                     case 3:
                         err_4 = _a.sent();
-                        throw new Error("could not create new user. ".concat(err_4));
+                        throw new Error("could not sign in. ".concat(err_4));
                     case 4: return [2 /*return*/];
                 }
             });

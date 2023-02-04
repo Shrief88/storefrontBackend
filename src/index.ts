@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import userRoutes from "./handlers/userHandler";
+import productRoutes from "./handlers/productHandler";
 
 const app = express();
 const port = 3000;
@@ -8,6 +9,7 @@ const host = "localhost";
 
 app.use(bodyParser.json());
 userRoutes(app);
+productRoutes(app);
 
 app.get("/", (req: express.Request, res: express.Response) => {
   res.send("heel");
