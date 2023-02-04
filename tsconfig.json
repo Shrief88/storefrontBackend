@@ -9,7 +9,7 @@
     "strict": true,
     "noImplicitAny": true,
     "skipLibCheck": true,
-    "useUnknownInCatchVariables": false,
+    "useUnknownInCatchVariables": false
   },
   "exclude": ["node_modules", "./dist", "spec"],
   "include": ["src/**/*"]
