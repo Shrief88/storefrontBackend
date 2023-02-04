@@ -35,15 +35,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var userModel_1 = require("../../models/userModel");
-var dotenv_1 = __importDefault(require("dotenv"));
-var bcrypt_1 = __importDefault(require("bcrypt"));
-dotenv_1.default.config();
-var BCRYPT_PASSWORD = process.env.BCRYPT_PASSWORD;
+var bycrypt_1 = require("../../utilities/bycrypt");
 var store = new userModel_1.UserStore();
 describe("user model", function () {
     var newUser;
@@ -72,6 +66,9 @@ describe("user model", function () {
         it("should have create method", function () {
             expect(store.create).toBeDefined();
         });
+        it("should have authentiacate method", function () {
+            expect(store.authenticate).toBeDefined();
+        });
     });
     describe("test model methods", function () {
         describe("create method", function () {
@@ -88,7 +85,7 @@ describe("user model", function () {
                 });
             });
             it("password should be hashed", function () {
-                expect(bcrypt_1.default.compareSync("password123" + BCRYPT_PASSWORD, newUser.password)).toBe(true);
+                expect((0, bycrypt_1.validatePassword)("password123", newUser.password)).toBe(true);
             });
             it("should throw an error if email already exist", function () { return __awaiter(void 0, void 0, void 0, function () {
                 var errMessage, err_1;
@@ -162,6 +159,77 @@ describe("user model", function () {
                             return [3 /*break*/, 4];
                         case 4:
                             expect(errMessage).toEqual("could not get user, Error: you should provide existing id");
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
+        });
+        describe("authentiacate method", function () {
+            it("should return a user", function () { return __awaiter(void 0, void 0, void 0, function () {
+                var result, userInfo;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, store.authenticate("shriefessam1999@gmail.com", "password123")];
+                        case 1:
+                            result = _a.sent();
+                            userInfo = {
+                                id: result.id,
+                                email: result.email,
+                                first_name: result.first_name,
+                                last_name: result.last_name,
+                            };
+                            expect(userInfo).toEqual({
+                                id: 1,
+                                email: "shriefessam1999@gmail.com",
+                                first_name: "Shrief",
+                                last_name: "Essam",
+                            });
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
+            it("should throw an error if email is not exist", function () { return __awaiter(void 0, void 0, void 0, function () {
+                var errMessage, err_3;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            errMessage = "";
+                            _a.label = 1;
+                        case 1:
+                            _a.trys.push([1, 3, , 4]);
+                            return [4 /*yield*/, store.authenticate("shriefessam1@gmail.com", "password123")];
+                        case 2:
+                            _a.sent();
+                            return [3 /*break*/, 4];
+                        case 3:
+                            err_3 = _a.sent();
+                            errMessage = err_3.message;
+                            return [3 /*break*/, 4];
+                        case 4:
+                            expect(errMessage).toEqual("could not sign in. Error: no such email exist");
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
+            it("should throw an error if user enteres wrong password", function () { return __awaiter(void 0, void 0, void 0, function () {
+                var errMessage, err_4;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            errMessage = "";
+                            _a.label = 1;
+                        case 1:
+                            _a.trys.push([1, 3, , 4]);
+                            return [4 /*yield*/, store.authenticate("shriefessam1999@gmail.com", "dsds")];
+                        case 2:
+                            _a.sent();
+                            return [3 /*break*/, 4];
+                        case 3:
+                            err_4 = _a.sent();
+                            errMessage = err_4.message;
+                            return [3 /*break*/, 4];
+                        case 4:
+                            expect(errMessage).toEqual("could not sign in. Error: Invalid password");
                             return [2 /*return*/];
                     }
                 });

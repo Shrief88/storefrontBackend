@@ -1,9 +1,5 @@
 import { type User, UserStore } from "../../models/userModel";
-import dotenv from "dotenv";
-import bcrypt from "bcrypt";
-
-dotenv.config();
-const { BCRYPT_PASSWORD } = process.env;
+import { validatePassword } from "../../utilities/bycrypt";
 
 const store = new UserStore();
 
@@ -28,6 +24,9 @@ describe("user model", () => {
     it("should have create method", () => {
       expect(store.create).toBeDefined();
     });
+    it("should have authentiacate method", () => {
+      expect(store.authenticate).toBeDefined();
+    });
   });
 
   describe("test model methods", () => {
@@ -46,12 +45,7 @@ describe("user model", () => {
       });
 
       it("password should be hashed", () => {
-        expect(
-          bcrypt.compareSync(
-            "password123" + (BCRYPT_PASSWORD as string),
-            newUser.password
-          )
-        ).toBe(true);
+        expect(validatePassword("password123", newUser.password)).toBe(true);
       });
 
       it("should throw an error if email already exist", async () => {
@@ -98,6 +92,51 @@ describe("user model", () => {
         }
         expect(errMessage).toEqual(
           "could not get user, Error: you should provide existing id"
+        );
+      });
+    });
+
+    describe("authentiacate method", () => {
+      it("should return a user", async () => {
+        const result = await store.authenticate(
+          "shriefessam1999@gmail.com",
+          "password123"
+        );
+        const userInfo = {
+          id: result.id,
+          email: result.email,
+          first_name: result.first_name,
+          last_name: result.last_name,
+        };
+        expect(userInfo).toEqual({
+          id: 1,
+          email: "shriefessam1999@gmail.com",
+          first_name: "Shrief",
+          last_name: "Essam",
+        });
+      });
+
+      it("should throw an error if email is not exist", async () => {
+        let errMessage: string = "";
+        try {
+          await store.authenticate("shriefessam1@gmail.com", "password123");
+        } catch (err) {
+          errMessage = err.message;
+        }
+        expect(errMessage).toEqual(
+          "could not sign in. Error: no such email exist"
+        );
+      });
+
+      it("should throw an error if user enteres wrong password", async () => {
+        let errMessage: string = "";
+        try {
+          await store.authenticate("shriefessam1999@gmail.com", "dsds");
+        } catch (err) {
+          errMessage = err.message;
+        }
+        expect(errMessage).toEqual(
+          "could not sign in. Error: Invalid password"
         );
       });
     });

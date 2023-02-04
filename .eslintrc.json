@@ -12,6 +12,7 @@
     "project": "tsconfig.json"
   },
   "rules": {
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "@typescript-eslint/restrict-template-expressions" : "off"
   }
 }

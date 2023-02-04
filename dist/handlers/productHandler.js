@@ -39,24 +39,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var userModel_1 = require("../models/userModel");
-var emailValidation_1 = require("../utilities/emailValidation");
-var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-var dotenv_1 = __importDefault(require("dotenv"));
+var productModel_1 = require("../models/productModel");
 var verifyAuthToken_1 = __importDefault(require("../middlewares/verifyAuthToken"));
-dotenv_1.default.config();
-var TOKEN_SECRET = process.env.TOKEN_SECRET;
-var store = new userModel_1.UserStore();
-var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var users, err_1;
+var store = new productModel_1.ProductStore();
+var index = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var products, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 return [4 /*yield*/, store.index()];
             case 1:
-                users = _a.sent();
-                res.json(users);
+                products = _a.sent();
+                res.json(products);
                 return [3 /*break*/, 3];
             case 2:
                 err_1 = _a.sent();
@@ -89,32 +84,22 @@ var show = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
     });
 }); };
 var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, newUser, err_3;
+    var product, newProduct, err_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                user = {
-                    email: req.body.email,
-                    first_name: req.body.first_name,
-                    last_name: req.body.last_name,
-                    password: req.body.password,
+                product = {
+                    name: req.body.name,
+                    price: req.body.price,
+                    category: req.body.category,
                 };
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                if (user.email === "" ||
-                    user.first_name === "" ||
-                    user.last_name === "" ||
-                    user.password === "") {
-                    throw new Error("you should provide all user attributes");
-                }
-                if (!(0, emailValidation_1.validateEmail)(user.email)) {
-                    throw new Error("you should provide a valid email address");
-                }
-                return [4 /*yield*/, store.create(user)];
+                return [4 /*yield*/, store.create(product)];
             case 2:
-                newUser = _a.sent();
-                res.json(newUser);
+                newProduct = _a.sent();
+                res.json(newProduct);
                 return [3 /*break*/, 4];
             case 3:
                 err_3 = _a.sent();
@@ -124,30 +109,9 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
         }
     });
 }); };
-var authenticate = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, token, err_4;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, store.authenticate(req.body.email, req.body.password)];
-            case 1:
-                user = _a.sent();
-                token = jsonwebtoken_1.default.sign({ user: user }, TOKEN_SECRET);
-                res.json(token);
-                return [3 /*break*/, 3];
-            case 2:
-                err_4 = _a.sent();
-                res.status(400).json({ error: err_4.message });
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
-        }
-    });
-}); };
-var userRoutes = function (app) {
-    app.get("/users", verifyAuthToken_1.default, index);
-    app.post("/users", create);
-    app.get("/users/:id", verifyAuthToken_1.default, show);
-    app.post("/users/authentiacate", authenticate);
+var productRoutes = function (app) {
+    app.get("/products", index);
+    app.post("/products", verifyAuthToken_1.default, create);
+    app.get("/products/:id", show);
 };
-exports.default = userRoutes;
+exports.default = productRoutes;

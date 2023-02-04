@@ -41,10 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserStore = void 0;
 var database_1 = __importDefault(require("../database"));
-var bcrypt_1 = __importDefault(require("bcrypt"));
-var dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
-var _a = process.env, BCRYPT_PASSWORD = _a.BCRYPT_PASSWORD, SALT_ROUNDS = _a.SALT_ROUNDS;
+var bycrypt_1 = require("../utilities/bycrypt");
 var UserStore = /** @class */ (function () {
     function UserStore() {
     }
@@ -118,7 +115,7 @@ var UserStore = /** @class */ (function () {
                         }
                         sql =
                             "INSERT INTO users (email,first_name,last_name,password) VALUES ($1,$2,$3,$4) RETURNING *";
-                        hash = bcrypt_1.default.hashSync(user.password + BCRYPT_PASSWORD, parseInt(SALT_ROUNDS));
+                        hash = (0, bycrypt_1.hashPassword)(user.password);
                         return [4 /*yield*/, conn.query(sql, [
                                 user.email,
                                 user.first_name,
@@ -154,7 +151,7 @@ var UserStore = /** @class */ (function () {
                         if (res.rowCount === 0) {
                             throw new Error("no such email exist");
                         }
-                        if (!bcrypt_1.default.compareSync(password + BCRYPT_PASSWORD, res.rows[0].password)) {
+                        if (!(0, bycrypt_1.validatePassword)(password, res.rows[0].password)) {
                             throw new Error("Invalid password");
                         }
                         conn.release();

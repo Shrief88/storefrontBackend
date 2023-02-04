@@ -1,10 +1,6 @@
 import clinet from "../database";
-import bcrypt from "bcrypt";
-import dotenv from "dotenv";
 import { type QueryResult } from "pg";
-
-dotenv.config();
-const { BCRYPT_PASSWORD, SALT_ROUNDS } = process.env;
+import { hashPassword, validatePassword } from "../utilities/bycrypt";
 
 export interface User {
   id?: number;
@@ -53,10 +49,7 @@ export class UserStore {
       }
       sql =
         "INSERT INTO users (email,first_name,last_name,password) VALUES ($1,$2,$3,$4) RETURNING *";
-      const hash = bcrypt.hashSync(
-        user.password + (BCRYPT_PASSWORD as string),
-        parseInt(SALT_ROUNDS as string)
-      );
+      const hash = hashPassword(user.password);
       res = await conn.query(sql, [
         user.email,
         user.first_name,
@@ -79,12 +72,7 @@ export class UserStore {
         throw new Error("no such email exist");
       }
 
-      if (
-        !bcrypt.compareSync(
-          password + (BCRYPT_PASSWORD as string),
-          res.rows[0].password
-        )
-      ) {
+      if (!validatePassword(password, res.rows[0].password)) {
         throw new Error("Invalid password");
       }
       conn.release();
