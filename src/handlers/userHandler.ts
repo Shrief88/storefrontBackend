@@ -4,6 +4,7 @@ import { type User, UserStore } from "../models/userModel";
 import { validateEmail } from "../utilities/emailValidation";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import verifyAuthToken from "../middlewares/verifyAuthToken";
 
 dotenv.config();
 const { TOKEN_SECRET } = process.env;
@@ -70,10 +71,10 @@ const authenticate = async (req: Request, res: Response): Promise<void> => {
 };
 
 const userRoutes = (app: express.Application): void => {
-  app.get("/users", index as RequestHandler);
-  app.post("/users", create as RequestHandler);
-  app.get("/users/:id", show as RequestHandler);
-  app.post("/users/authentiacte", authenticate as RequestHandler);
+  app.get("/users", verifyAuthToken, index as RequestHandler);
+  app.post("/users", verifyAuthToken, create as RequestHandler);
+  app.get("/users/:id", verifyAuthToken, show as RequestHandler);
+  app.post("/users/authentiacate", authenticate as RequestHandler);
 };
 
 export default userRoutes;
