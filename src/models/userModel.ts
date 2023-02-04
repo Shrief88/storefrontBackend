@@ -1,6 +1,7 @@
 import clinet from "../database";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
+import { type QueryResult } from "pg";
 
 dotenv.config();
 const { BCRYPT_PASSWORD, SALT_ROUNDS } = process.env;
@@ -45,13 +46,18 @@ export class UserStore {
   async create(user: User): Promise<User> {
     try {
       const conn = await clinet.connect();
-      const sql =
+      let sql: string = "SELECT * FROM users WHERE email=$1";
+      let res: QueryResult<User> = await conn.query(sql, [user.email]);
+      if (res.rowCount !== 0) {
+        throw new Error("email is already used!");
+      }
+      sql =
         "INSERT INTO users (email,first_name,last_name,password) VALUES ($1,$2,$3,$4) RETURNING *";
       const hash = bcrypt.hashSync(
         user.password + (BCRYPT_PASSWORD as string),
         parseInt(SALT_ROUNDS as string)
       );
-      const res = await conn.query(sql, [
+      res = await conn.query(sql, [
         user.email,
         user.first_name,
         user.last_name,
@@ -60,7 +66,7 @@ export class UserStore {
       conn.release();
       return res.rows[0];
     } catch (err) {
-      throw new Error(`could not create new user. Error: $(err)`);
+      throw new Error(`could not create new user. ${err}`);
     }
   }
 }

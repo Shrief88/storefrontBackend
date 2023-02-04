@@ -90,6 +90,34 @@ describe("user model", function () {
             it("password should be hashed", function () {
                 expect(bcrypt_1.default.compareSync("password123" + BCRYPT_PASSWORD, newUser.password)).toBe(true);
             });
+            it("should throw an error if email already exist", function () { return __awaiter(void 0, void 0, void 0, function () {
+                var errMessage, err_1;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            errMessage = "";
+                            _a.label = 1;
+                        case 1:
+                            _a.trys.push([1, 3, , 4]);
+                            return [4 /*yield*/, store.create({
+                                    email: "shriefessam1999@gmail.com",
+                                    first_name: "mohamed",
+                                    last_name: "esmail",
+                                    password: "password123",
+                                })];
+                        case 2:
+                            _a.sent();
+                            return [3 /*break*/, 4];
+                        case 3:
+                            err_1 = _a.sent();
+                            errMessage = err_1.message;
+                            return [3 /*break*/, 4];
+                        case 4:
+                            expect(errMessage).toEqual("could not create new user. Error: email is already used!");
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
         });
         describe("show method", function () {
             it("should return the right user", function () { return __awaiter(void 0, void 0, void 0, function () {
@@ -116,7 +144,7 @@ describe("user model", function () {
                 });
             }); });
             it("should throw an error if user enter not existing id", function () { return __awaiter(void 0, void 0, void 0, function () {
-                var errMessage, err_1;
+                var errMessage, err_2;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -129,8 +157,8 @@ describe("user model", function () {
                             _a.sent();
                             return [3 /*break*/, 4];
                         case 3:
-                            err_1 = _a.sent();
-                            errMessage = err_1.message;
+                            err_2 = _a.sent();
+                            errMessage = err_2.message;
                             return [3 /*break*/, 4];
                         case 4:
                             expect(errMessage).toEqual("could not get user, Error: you should provide existing id");

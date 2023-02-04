@@ -53,6 +53,23 @@ describe("user model", () => {
           )
         ).toBe(true);
       });
+
+      it("should throw an error if email already exist", async () => {
+        let errMessage: string = "";
+        try {
+          await store.create({
+            email: "shriefessam1999@gmail.com",
+            first_name: "mohamed",
+            last_name: "esmail",
+            password: "password123",
+          });
+        } catch (err) {
+          errMessage = err.message;
+        }
+        expect(errMessage).toEqual(
+          "could not create new user. Error: email is already used!"
+        );
+      });
     });
 
     describe("show method", () => {

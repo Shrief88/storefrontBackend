@@ -101,15 +101,23 @@ var UserStore = /** @class */ (function () {
     };
     UserStore.prototype.create = function (user) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, sql, hash, res, err_3;
+            var conn, sql, res, hash, err_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
+                        _a.trys.push([0, 4, , 5]);
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = "INSERT INTO users (email,first_name,last_name,password) VALUES ($1,$2,$3,$4) RETURNING *";
+                        sql = "SELECT * FROM users WHERE email=$1";
+                        return [4 /*yield*/, conn.query(sql, [user.email])];
+                    case 2:
+                        res = _a.sent();
+                        if (res.rowCount !== 0) {
+                            throw new Error("email is already used!");
+                        }
+                        sql =
+                            "INSERT INTO users (email,first_name,last_name,password) VALUES ($1,$2,$3,$4) RETURNING *";
                         hash = bcrypt_1.default.hashSync(user.password + BCRYPT_PASSWORD, parseInt(SALT_ROUNDS));
                         return [4 /*yield*/, conn.query(sql, [
                                 user.email,
@@ -117,14 +125,14 @@ var UserStore = /** @class */ (function () {
                                 user.last_name,
                                 hash,
                             ])];
-                    case 2:
+                    case 3:
                         res = _a.sent();
                         conn.release();
                         return [2 /*return*/, res.rows[0]];
-                    case 3:
+                    case 4:
                         err_3 = _a.sent();
-                        throw new Error("could not create new user. Error: $(err)");
-                    case 4: return [2 /*return*/];
+                        throw new Error("could not create new user. ".concat(err_3));
+                    case 5: return [2 /*return*/];
                 }
             });
         });
