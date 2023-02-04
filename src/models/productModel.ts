@@ -58,4 +58,16 @@ export class ProductStore {
       throw new Error(`could not create new product. ${err}`);
     }
   }
+
+  async getOrderByCategory(category: string): Promise<Product[]> {
+    try {
+      const conn = await clinet.connect();
+      const sql = "SELECT * FROM products WHERE category=($1)";
+      const res = await conn.query(sql, [category]);
+      conn.release();
+      return res.rows;
+    } catch (err) {
+      throw new Error(`could not get products. ${err}`);
+    }
+  }
 }
