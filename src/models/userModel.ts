@@ -7,6 +7,7 @@ const { BCRYPT_PASSWORD, SALT_ROUNDS } = process.env;
 
 export interface User {
   id?: number;
+  email: string;
   first_name: string;
   last_name: string;
   password: string;
@@ -21,7 +22,7 @@ export class UserStore {
       conn.release();
       return res.rows;
     } catch (err) {
-      throw new Error(`could not get users. Error: $(err)`);
+      throw new Error(`could not get users`);
     }
   }
 
@@ -31,9 +32,13 @@ export class UserStore {
       const sql = "SELECT * FROM users WHERE id = ($1)";
       const res = await conn.query(sql, [id]);
       conn.release();
+
+      if (res.rowCount === 0) {
+        throw new Error("you should provide existing id");
+      }
       return res.rows[0];
     } catch (err) {
-      throw new Error(`could not get user. Error: $(err)`);
+      throw new Error(`could not get user, ${err}`);
     }
   }
 
@@ -41,12 +46,13 @@ export class UserStore {
     try {
       const conn = await clinet.connect();
       const sql =
-        "INSERT INTO users (first_name,last_name,password) VALUES ($1,$2,$3) RETURNING *";
+        "INSERT INTO users (email,first_name,last_name,password) VALUES ($1,$2,$3,$4) RETURNING *";
       const hash = bcrypt.hashSync(
         user.password + (BCRYPT_PASSWORD as string),
         parseInt(SALT_ROUNDS as string)
       );
       const res = await conn.query(sql, [
+        user.email,
         user.first_name,
         user.last_name,
         hash,

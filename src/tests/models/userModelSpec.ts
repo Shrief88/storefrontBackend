@@ -11,6 +11,7 @@ describe("user model", () => {
   let newUser: User;
   beforeAll(async () => {
     newUser = await store.create({
+      email: "shriefessam1999@gmail.com",
       first_name: "Shrief",
       last_name: "Essam",
       password: "password123",
@@ -29,44 +30,64 @@ describe("user model", () => {
     });
   });
 
-  describe("create method", () => {
-    it("create method should add a user", () => {
-      const userInfo = {
-        first_name: newUser.first_name,
-        last_name: newUser.last_name,
-      };
-      expect(userInfo).toEqual({
-        first_name: "Shrief",
-        last_name: "Essam",
+  describe("test model methods", () => {
+    describe("create method", () => {
+      it("create method should add a user", () => {
+        const userInfo = {
+          email: newUser.email,
+          first_name: newUser.first_name,
+          last_name: newUser.last_name,
+        };
+        expect(userInfo).toEqual({
+          email: "shriefessam1999@gmail.com",
+          first_name: "Shrief",
+          last_name: "Essam",
+        });
+      });
+
+      it("password should be hashed", () => {
+        expect(
+          bcrypt.compareSync(
+            "password123" + (BCRYPT_PASSWORD as string),
+            newUser.password
+          )
+        ).toBe(true);
       });
     });
 
-    it("password should be hashed", () => {
-      expect(
-        bcrypt.compareSync(
-          "password123" + (BCRYPT_PASSWORD as string),
-          newUser.password
-        )
-      ).toBe(true);
-    });
-  });
+    describe("show method", () => {
+      it("should return the right user", async () => {
+        const result = await store.show(1);
+        const userInfo = {
+          id: result.id,
+          email: result.email,
+          first_name: result.first_name,
+          last_name: result.last_name,
+        };
+        expect(userInfo).toEqual({
+          id: 1,
+          email: "shriefessam1999@gmail.com",
+          first_name: "Shrief",
+          last_name: "Essam",
+        });
+      });
 
-  it("show method should return the right user", async () => {
-    const result = await store.show(1);
-    const userInfo = {
-      id: result.id,
-      first_name: result.first_name,
-      last_name: result.last_name,
-    };
-    expect(userInfo).toEqual({
-      id: 1,
-      first_name: "Shrief",
-      last_name: "Essam",
+      it("should throw an error if user enter not existing id", async () => {
+        let errMessage: string = "";
+        try {
+          await store.show(3);
+        } catch (err) {
+          errMessage = err.message;
+        }
+        expect(errMessage).toEqual(
+          "could not get user, Error: you should provide existing id"
+        );
+      });
     });
-  });
 
-  it("index method should retern list of users", async () => {
-    const result = await store.index();
-    expect(result.length).toEqual(1);
+    it("index method should retern list of users", async () => {
+      const result = await store.index();
+      expect(result.length).toEqual(1);
+    });
   });
 });

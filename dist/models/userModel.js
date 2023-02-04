@@ -66,7 +66,7 @@ var UserStore = /** @class */ (function () {
                         return [2 /*return*/, res.rows];
                     case 3:
                         err_1 = _a.sent();
-                        throw new Error("could not get users. Error: $(err)");
+                        throw new Error("could not get users");
                     case 4: return [2 /*return*/];
                 }
             });
@@ -87,10 +87,13 @@ var UserStore = /** @class */ (function () {
                     case 2:
                         res = _a.sent();
                         conn.release();
+                        if (res.rowCount === 0) {
+                            throw new Error("you should provide existing id");
+                        }
                         return [2 /*return*/, res.rows[0]];
                     case 3:
                         err_2 = _a.sent();
-                        throw new Error("could not get user. Error: $(err)");
+                        throw new Error("could not get user, ".concat(err_2));
                     case 4: return [2 /*return*/];
                 }
             });
@@ -106,9 +109,10 @@ var UserStore = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = "INSERT INTO users (first_name,last_name,password) VALUES ($1,$2,$3) RETURNING *";
+                        sql = "INSERT INTO users (email,first_name,last_name,password) VALUES ($1,$2,$3,$4) RETURNING *";
                         hash = bcrypt_1.default.hashSync(user.password + BCRYPT_PASSWORD, parseInt(SALT_ROUNDS));
                         return [4 /*yield*/, conn.query(sql, [
+                                user.email,
                                 user.first_name,
                                 user.last_name,
                                 hash,

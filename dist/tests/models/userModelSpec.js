@@ -51,6 +51,7 @@ describe("user model", function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, store.create({
+                        email: "shriefessam1999@gmail.com",
                         first_name: "Shrief",
                         last_name: "Essam",
                         password: "password123",
@@ -72,52 +73,83 @@ describe("user model", function () {
             expect(store.create).toBeDefined();
         });
     });
-    describe("create method", function () {
-        it("create method should add a user", function () {
-            var userInfo = {
-                first_name: newUser.first_name,
-                last_name: newUser.last_name,
-            };
-            expect(userInfo).toEqual({
-                first_name: "Shrief",
-                last_name: "Essam",
+    describe("test model methods", function () {
+        describe("create method", function () {
+            it("create method should add a user", function () {
+                var userInfo = {
+                    email: newUser.email,
+                    first_name: newUser.first_name,
+                    last_name: newUser.last_name,
+                };
+                expect(userInfo).toEqual({
+                    email: "shriefessam1999@gmail.com",
+                    first_name: "Shrief",
+                    last_name: "Essam",
+                });
+            });
+            it("password should be hashed", function () {
+                expect(bcrypt_1.default.compareSync("password123" + BCRYPT_PASSWORD, newUser.password)).toBe(true);
             });
         });
-        it("password should be hashed", function () {
-            expect(bcrypt_1.default.compareSync("password123" + BCRYPT_PASSWORD, newUser.password)).toBe(true);
+        describe("show method", function () {
+            it("should return the right user", function () { return __awaiter(void 0, void 0, void 0, function () {
+                var result, userInfo;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, store.show(1)];
+                        case 1:
+                            result = _a.sent();
+                            userInfo = {
+                                id: result.id,
+                                email: result.email,
+                                first_name: result.first_name,
+                                last_name: result.last_name,
+                            };
+                            expect(userInfo).toEqual({
+                                id: 1,
+                                email: "shriefessam1999@gmail.com",
+                                first_name: "Shrief",
+                                last_name: "Essam",
+                            });
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
+            it("should throw an error if user enter not existing id", function () { return __awaiter(void 0, void 0, void 0, function () {
+                var errMessage, err_1;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            errMessage = "";
+                            _a.label = 1;
+                        case 1:
+                            _a.trys.push([1, 3, , 4]);
+                            return [4 /*yield*/, store.show(3)];
+                        case 2:
+                            _a.sent();
+                            return [3 /*break*/, 4];
+                        case 3:
+                            err_1 = _a.sent();
+                            errMessage = err_1.message;
+                            return [3 /*break*/, 4];
+                        case 4:
+                            expect(errMessage).toEqual("could not get user, Error: you should provide existing id");
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
         });
+        it("index method should retern list of users", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, store.index()];
+                    case 1:
+                        result = _a.sent();
+                        expect(result.length).toEqual(1);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
     });
-    it("show method should return the right user", function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result, userInfo;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, store.show(1)];
-                case 1:
-                    result = _a.sent();
-                    userInfo = {
-                        id: result.id,
-                        first_name: result.first_name,
-                        last_name: result.last_name,
-                    };
-                    expect(userInfo).toEqual({
-                        id: 1,
-                        first_name: "Shrief",
-                        last_name: "Essam",
-                    });
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it("index method should retern list of users", function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, store.index()];
-                case 1:
-                    result = _a.sent();
-                    expect(result.length).toEqual(1);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
 });
