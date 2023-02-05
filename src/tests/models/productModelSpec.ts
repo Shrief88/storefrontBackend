@@ -1,3 +1,4 @@
+import clinet from "../../database";
 import { type Product, ProductStore } from "../../models/productModel";
 
 const store = new ProductStore();
@@ -12,6 +13,13 @@ describe("product model", () => {
     });
   });
 
+  afterAll(async () => {
+    const conn = await clinet.connect();
+    const sql = "DELETE FROM products";
+    await conn.query(sql);
+    conn.release();
+  });
+
   describe("model should have all Requirements methods", () => {
     it("should have index method", () => {
       expect(store.index).toBeDefined();
@@ -22,20 +30,23 @@ describe("product model", () => {
     it("should have create method", () => {
       expect(store.create).toBeDefined();
     });
+    it("should have getOrderByCategory method", () => {
+      expect(store.getOrderByCategory).toBeDefined();
+    });
   });
 
   describe("test model methods", () => {
     describe("create method", () => {
       it("create method should add a product", () => {
         expect(newProduct).toEqual({
-          id: 1,
+          id: newProduct.id,
           name: "mobile",
           price: 1000,
           category: "electronics",
         });
       });
 
-      it("should throw an error if email name exist", async () => {
+      it("should throw an error if name exist", async () => {
         let errMessage: string = "";
         try {
           await store.create({
@@ -54,9 +65,9 @@ describe("product model", () => {
 
     describe("show method", () => {
       it("should return the right product", async () => {
-        const result = await store.show(1);
+        const result = await store.show(newProduct.id as number);
         expect(result).toEqual({
-          id: 1,
+          id: newProduct.id,
           name: "mobile",
           price: 1000,
           category: "electronics",
@@ -66,7 +77,7 @@ describe("product model", () => {
       it("should throw an error if user enter not existing id", async () => {
         let errMessage: string = "";
         try {
-          await store.show(3);
+          await store.show((newProduct.id as number) + 1);
         } catch (err) {
           errMessage = err.message;
         }
@@ -79,6 +90,32 @@ describe("product model", () => {
     it("index method should retern list of users", async () => {
       const result = await store.index();
       expect(result.length).toEqual(1);
+    });
+
+    describe("getOrderByCategory method", () => {
+      beforeAll(async () => {
+        await store.create({
+          name: "t-shrit",
+          price: 1000,
+          category: "clothes",
+        });
+      });
+      it("should return empty list if category is not found", async () => {
+        const result = await store.getOrderByCategory("books");
+        expect(result).toEqual([]);
+      });
+
+      it("should return the right orders by category", async () => {
+        const result = await store.getOrderByCategory("clothes");
+        expect(result).toEqual([
+          {
+            id: result[0].id,
+            name: "t-shrit",
+            price: 1000,
+            category: "clothes",
+          },
+        ]);
+      });
     });
   });
 });

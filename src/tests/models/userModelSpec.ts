@@ -17,8 +17,8 @@ describe("user model", () => {
 
   afterAll(async () => {
     const conn = await clinet.connect();
-    const sql = "DELETE FROM users WHERE id = ($1)";
-    await conn.query(sql, [1]);
+    const sql = "DELETE FROM users";
+    await conn.query(sql);
     conn.release();
   });
 

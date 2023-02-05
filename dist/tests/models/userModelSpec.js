@@ -67,8 +67,8 @@ describe("user model", function () {
                 case 0: return [4 /*yield*/, database_1.default.connect()];
                 case 1:
                     conn = _a.sent();
-                    sql = "DELETE FROM users WHERE id = ($1)";
-                    return [4 /*yield*/, conn.query(sql, [1])];
+                    sql = "DELETE FROM users";
+                    return [4 /*yield*/, conn.query(sql)];
                 case 2:
                     _a.sent();
                     conn.release();

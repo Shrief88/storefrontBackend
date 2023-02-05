@@ -35,7 +35,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var database_1 = __importDefault(require("../../database"));
 var productModel_1 = require("../../models/productModel");
 var store = new productModel_1.ProductStore();
 describe("product model", function () {
@@ -54,6 +58,22 @@ describe("product model", function () {
             }
         });
     }); });
+    afterAll(function () { return __awaiter(void 0, void 0, void 0, function () {
+        var conn, sql;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, database_1.default.connect()];
+                case 1:
+                    conn = _a.sent();
+                    sql = "DELETE FROM products";
+                    return [4 /*yield*/, conn.query(sql)];
+                case 2:
+                    _a.sent();
+                    conn.release();
+                    return [2 /*return*/];
+            }
+        });
+    }); });
     describe("model should have all Requirements methods", function () {
         it("should have index method", function () {
             expect(store.index).toBeDefined();
@@ -64,18 +84,21 @@ describe("product model", function () {
         it("should have create method", function () {
             expect(store.create).toBeDefined();
         });
+        it("should have getOrderByCategory method", function () {
+            expect(store.getOrderByCategory).toBeDefined();
+        });
     });
     describe("test model methods", function () {
         describe("create method", function () {
             it("create method should add a product", function () {
                 expect(newProduct).toEqual({
-                    id: 1,
+                    id: newProduct.id,
                     name: "mobile",
                     price: 1000,
                     category: "electronics",
                 });
             });
-            it("should throw an error if email name exist", function () { return __awaiter(void 0, void 0, void 0, function () {
+            it("should throw an error if name exist", function () { return __awaiter(void 0, void 0, void 0, function () {
                 var errMessage, err_1;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
@@ -108,11 +131,11 @@ describe("product model", function () {
                 var result;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, store.show(1)];
+                        case 0: return [4 /*yield*/, store.show(newProduct.id)];
                         case 1:
                             result = _a.sent();
                             expect(result).toEqual({
-                                id: 1,
+                                id: newProduct.id,
                                 name: "mobile",
                                 price: 1000,
                                 category: "electronics",
@@ -130,7 +153,7 @@ describe("product model", function () {
                             _a.label = 1;
                         case 1:
                             _a.trys.push([1, 3, , 4]);
-                            return [4 /*yield*/, store.show(3)];
+                            return [4 /*yield*/, store.show(newProduct.id + 1)];
                         case 2:
                             _a.sent();
                             return [3 /*break*/, 4];
@@ -157,5 +180,52 @@ describe("product model", function () {
                 }
             });
         }); });
+        describe("getOrderByCategory method", function () {
+            beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, store.create({
+                                name: "t-shrit",
+                                price: 1000,
+                                category: "clothes",
+                            })];
+                        case 1:
+                            _a.sent();
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
+            it("should return empty list if category is not found", function () { return __awaiter(void 0, void 0, void 0, function () {
+                var result;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, store.getOrderByCategory("books")];
+                        case 1:
+                            result = _a.sent();
+                            expect(result).toEqual([]);
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
+            it("should return the right orders by category", function () { return __awaiter(void 0, void 0, void 0, function () {
+                var result;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, store.getOrderByCategory("clothes")];
+                        case 1:
+                            result = _a.sent();
+                            expect(result).toEqual([
+                                {
+                                    id: result[0].id,
+                                    name: "t-shrit",
+                                    price: 1000,
+                                    category: "clothes",
+                                },
+                            ]);
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
+        });
     });
 });
