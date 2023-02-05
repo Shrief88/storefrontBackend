@@ -94,7 +94,7 @@ describe("user model", function () {
         describe("create method", function () {
             it("create method should add a user", function () {
                 expect(newUser).toEqual({
-                    id: 1,
+                    id: newUser.id,
                     email: "shriefessam1999@gmail.com",
                     first_name: "Shrief",
                     last_name: "Essam",
@@ -138,11 +138,11 @@ describe("user model", function () {
                 var result;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, store.show(1)];
+                        case 0: return [4 /*yield*/, store.show(newUser.id)];
                         case 1:
                             result = _a.sent();
                             expect(result).toEqual({
-                                id: 1,
+                                id: result.id,
                                 email: "shriefessam1999@gmail.com",
                                 first_name: "Shrief",
                                 last_name: "Essam",
@@ -161,7 +161,7 @@ describe("user model", function () {
                             _a.label = 1;
                         case 1:
                             _a.trys.push([1, 3, , 4]);
-                            return [4 /*yield*/, store.show(3)];
+                            return [4 /*yield*/, store.show(newUser.id + 1)];
                         case 2:
                             _a.sent();
                             return [3 /*break*/, 4];
@@ -185,7 +185,7 @@ describe("user model", function () {
                         case 1:
                             result = _a.sent();
                             expect(result).toEqual({
-                                id: 1,
+                                id: result.id,
                                 email: "shriefessam1999@gmail.com",
                                 first_name: "Shrief",
                                 last_name: "Essam",

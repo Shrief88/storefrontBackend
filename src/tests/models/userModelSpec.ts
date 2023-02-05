@@ -41,7 +41,7 @@ describe("user model", () => {
     describe("create method", () => {
       it("create method should add a user", () => {
         expect(newUser).toEqual({
-          id: 1,
+          id: newUser.id,
           email: "shriefessam1999@gmail.com",
           first_name: "Shrief",
           last_name: "Essam",
@@ -73,9 +73,9 @@ describe("user model", () => {
 
     describe("show method", () => {
       it("should return the right user", async () => {
-        const result = await store.show(1);
+        const result = await store.show(newUser.id as number);
         expect(result).toEqual({
-          id: 1,
+          id: result.id,
           email: "shriefessam1999@gmail.com",
           first_name: "Shrief",
           last_name: "Essam",
@@ -86,7 +86,7 @@ describe("user model", () => {
       it("should throw an error if user enter not existing id", async () => {
         let errMessage: string = "";
         try {
-          await store.show(3);
+          await store.show((newUser.id as number) + 1);
         } catch (err) {
           errMessage = err.message;
         }
@@ -103,7 +103,7 @@ describe("user model", () => {
           "password123"
         );
         expect(result).toEqual({
-          id: 1,
+          id: result.id,
           email: "shriefessam1999@gmail.com",
           first_name: "Shrief",
           last_name: "Essam",

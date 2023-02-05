@@ -2,7 +2,7 @@ import { type Product, ProductStore } from "../../models/productModel";
 
 const store = new ProductStore();
 
-describe("user model", () => {
+describe("product model", () => {
   let newProduct: Product;
   beforeAll(async () => {
     newProduct = await store.create({
