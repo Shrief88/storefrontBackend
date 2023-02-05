@@ -131,6 +131,30 @@ var ProductStore = /** @class */ (function () {
             });
         });
     };
+    ProductStore.prototype.getOrderByCategory = function (category) {
+        return __awaiter(this, void 0, void 0, function () {
+            var conn, sql, res, err_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, database_1.default.connect()];
+                    case 1:
+                        conn = _a.sent();
+                        sql = "SELECT * FROM products WHERE category=($1)";
+                        return [4 /*yield*/, conn.query(sql, [category])];
+                    case 2:
+                        res = _a.sent();
+                        conn.release();
+                        return [2 /*return*/, res.rows];
+                    case 3:
+                        err_4 = _a.sent();
+                        throw new Error("could not get products. ".concat(err_4));
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
     return ProductStore;
 }());
 exports.ProductStore = ProductStore;

@@ -1,5 +1,6 @@
 import { type User, UserStore } from "../../models/userModel";
 import { validatePassword } from "../../utilities/bycrypt";
+import clinet from "../../database";
 
 const store = new UserStore();
 
@@ -12,6 +13,13 @@ describe("user model", () => {
       last_name: "Essam",
       password: "password123",
     });
+  });
+
+  afterAll(async () => {
+    const conn = await clinet.connect();
+    const sql = "DELETE FROM users WHERE id = ($1)";
+    await conn.query(sql, [1]);
+    conn.release();
   });
 
   describe("model should have all Requirements methods", () => {
@@ -32,15 +40,12 @@ describe("user model", () => {
   describe("test model methods", () => {
     describe("create method", () => {
       it("create method should add a user", () => {
-        const userInfo = {
-          email: newUser.email,
-          first_name: newUser.first_name,
-          last_name: newUser.last_name,
-        };
-        expect(userInfo).toEqual({
+        expect(newUser).toEqual({
+          id: 1,
           email: "shriefessam1999@gmail.com",
           first_name: "Shrief",
           last_name: "Essam",
+          password: newUser.password,
         });
       });
 
@@ -69,17 +74,12 @@ describe("user model", () => {
     describe("show method", () => {
       it("should return the right user", async () => {
         const result = await store.show(1);
-        const userInfo = {
-          id: result.id,
-          email: result.email,
-          first_name: result.first_name,
-          last_name: result.last_name,
-        };
-        expect(userInfo).toEqual({
+        expect(result).toEqual({
           id: 1,
           email: "shriefessam1999@gmail.com",
           first_name: "Shrief",
           last_name: "Essam",
+          password: result.password,
         });
       });
 
@@ -97,22 +97,17 @@ describe("user model", () => {
     });
 
     describe("authentiacate method", () => {
-      it("should return a user", async () => {
+      it("should return the right user", async () => {
         const result = await store.authenticate(
           "shriefessam1999@gmail.com",
           "password123"
         );
-        const userInfo = {
-          id: result.id,
-          email: result.email,
-          first_name: result.first_name,
-          last_name: result.last_name,
-        };
-        expect(userInfo).toEqual({
+        expect(result).toEqual({
           id: 1,
           email: "shriefessam1999@gmail.com",
           first_name: "Shrief",
           last_name: "Essam",
+          password: result.password,
         });
       });
 

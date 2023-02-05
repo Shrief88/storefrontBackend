@@ -35,9 +35,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var userModel_1 = require("../../models/userModel");
 var bycrypt_1 = require("../../utilities/bycrypt");
+var database_1 = __importDefault(require("../../database"));
 var store = new userModel_1.UserStore();
 describe("user model", function () {
     var newUser;
@@ -52,6 +56,22 @@ describe("user model", function () {
                     })];
                 case 1:
                     newUser = _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    afterAll(function () { return __awaiter(void 0, void 0, void 0, function () {
+        var conn, sql;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, database_1.default.connect()];
+                case 1:
+                    conn = _a.sent();
+                    sql = "DELETE FROM users WHERE id = ($1)";
+                    return [4 /*yield*/, conn.query(sql, [1])];
+                case 2:
+                    _a.sent();
+                    conn.release();
                     return [2 /*return*/];
             }
         });
@@ -73,15 +93,12 @@ describe("user model", function () {
     describe("test model methods", function () {
         describe("create method", function () {
             it("create method should add a user", function () {
-                var userInfo = {
-                    email: newUser.email,
-                    first_name: newUser.first_name,
-                    last_name: newUser.last_name,
-                };
-                expect(userInfo).toEqual({
+                expect(newUser).toEqual({
+                    id: 1,
                     email: "shriefessam1999@gmail.com",
                     first_name: "Shrief",
                     last_name: "Essam",
+                    password: newUser.password,
                 });
             });
             it("password should be hashed", function () {
@@ -118,23 +135,18 @@ describe("user model", function () {
         });
         describe("show method", function () {
             it("should return the right user", function () { return __awaiter(void 0, void 0, void 0, function () {
-                var result, userInfo;
+                var result;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0: return [4 /*yield*/, store.show(1)];
                         case 1:
                             result = _a.sent();
-                            userInfo = {
-                                id: result.id,
-                                email: result.email,
-                                first_name: result.first_name,
-                                last_name: result.last_name,
-                            };
-                            expect(userInfo).toEqual({
+                            expect(result).toEqual({
                                 id: 1,
                                 email: "shriefessam1999@gmail.com",
                                 first_name: "Shrief",
                                 last_name: "Essam",
+                                password: result.password,
                             });
                             return [2 /*return*/];
                     }
@@ -165,24 +177,19 @@ describe("user model", function () {
             }); });
         });
         describe("authentiacate method", function () {
-            it("should return a user", function () { return __awaiter(void 0, void 0, void 0, function () {
-                var result, userInfo;
+            it("should return the right user", function () { return __awaiter(void 0, void 0, void 0, function () {
+                var result;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0: return [4 /*yield*/, store.authenticate("shriefessam1999@gmail.com", "password123")];
                         case 1:
                             result = _a.sent();
-                            userInfo = {
-                                id: result.id,
-                                email: result.email,
-                                first_name: result.first_name,
-                                last_name: result.last_name,
-                            };
-                            expect(userInfo).toEqual({
+                            expect(result).toEqual({
                                 id: 1,
                                 email: "shriefessam1999@gmail.com",
                                 first_name: "Shrief",
                                 last_name: "Essam",
+                                password: result.password,
                             });
                             return [2 /*return*/];
                     }
