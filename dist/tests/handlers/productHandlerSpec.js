@@ -44,7 +44,7 @@ var __1 = __importDefault(require("../.."));
 var database_1 = __importDefault(require("../../database"));
 var userModel_1 = require("../../models/userModel");
 var request = (0, supertest_1.default)(__1.default);
-describe("testing users endpoint response", function () {
+describe("testing products endpoint response", function () {
     var token;
     beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
         var store, response;
@@ -82,17 +82,39 @@ describe("testing users endpoint response", function () {
                     return [4 /*yield*/, conn.query(sql)];
                 case 2:
                     _a.sent();
+                    sql = "DELETE FROM products";
+                    return [4 /*yield*/, conn.query(sql)];
+                case 3:
+                    _a.sent();
                     conn.release();
                     return [2 /*return*/];
             }
         });
     }); });
-    describe("test [GET] /users endpoint", function () {
+    describe("test [GET] /products endpoint", function () {
+        it("should return ok response", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, request.get("/products")];
+                    case 1:
+                        response = _a.sent();
+                        expect(response.status).toBe(200);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+    });
+    describe("test [POST] /products endpoint", function () {
         it("should return an error if user try to access without token", function () { return __awaiter(void 0, void 0, void 0, function () {
             var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, request.get("/users")];
+                    case 0: return [4 /*yield*/, request.post("/products").send({
+                            name: "mobile",
+                            price: 1000,
+                            category: "electronics",
+                        })];
                     case 1:
                         response = _a.sent();
                         expect(response.status).toBe(401);
@@ -104,7 +126,14 @@ describe("testing users endpoint response", function () {
             var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, request.get("/users").set({
+                    case 0: return [4 /*yield*/, request
+                            .post("/products")
+                            .send({
+                            name: "mobile",
+                            price: 1000,
+                            category: "electronics",
+                        })
+                            .set({
                             Authorization: "Bearer ".concat(token),
                         })];
                     case 1:
@@ -115,40 +144,12 @@ describe("testing users endpoint response", function () {
             });
         }); });
     });
-    describe("test [GET] /users/:id endpoint", function () {
-        it("should return an error if user try to access without token", function () { return __awaiter(void 0, void 0, void 0, function () {
-            var response;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, request.get("/users/1")];
-                    case 1:
-                        response = _a.sent();
-                        expect(response.status).toBe(401);
-                        return [2 /*return*/];
-                }
-            });
-        }); });
-        it("should return ok response if user enter a valid token", function () { return __awaiter(void 0, void 0, void 0, function () {
-            var response;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, request.get("/users/2").set({
-                            Authorization: "Bearer ".concat(token),
-                        })];
-                    case 1:
-                        response = _a.sent();
-                        expect(response.status).toBe(200);
-                        return [2 /*return*/];
-                }
-            });
-        }); });
+    describe("test [GET] /products/:id endpoint", function () {
         it("should return not found response if user enter an unvalid input", function () { return __awaiter(void 0, void 0, void 0, function () {
             var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, request.get("/users/ffdfd").set({
-                            Authorization: "Bearer ".concat(token),
-                        })];
+                    case 0: return [4 /*yield*/, request.get("/products/ffdfd")];
                     case 1:
                         response = _a.sent();
                         expect(response.status).toBe(404);
@@ -156,64 +157,14 @@ describe("testing users endpoint response", function () {
                 }
             });
         }); });
-    });
-    describe("test [POST] /users endpoint", function () {
-        it("should return an error if user try to access without token", function () { return __awaiter(void 0, void 0, void 0, function () {
+        it("should return ok response", function () { return __awaiter(void 0, void 0, void 0, function () {
             var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, request.post("/users").send({
-                            email: "shriefessam1888@gmail.com",
-                            password: "Sh00000000",
-                            first_name: "Shrief",
-                            last_name: "Essam",
-                        })];
-                    case 1:
-                        response = _a.sent();
-                        expect(response.status).toBe(401);
-                        return [2 /*return*/];
-                }
-            });
-        }); });
-        it("should return ok response if user enter a valid token", function () { return __awaiter(void 0, void 0, void 0, function () {
-            var response;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, request
-                            .post("/users")
-                            .send({
-                            email: "shriefessam1888@gmail.com",
-                            password: "Sh00000000",
-                            first_name: "Shrief",
-                            last_name: "Essam",
-                        })
-                            .set({
-                            Authorization: "Bearer ".concat(token),
-                        })];
+                    case 0: return [4 /*yield*/, request.get("/products/1")];
                     case 1:
                         response = _a.sent();
                         expect(response.status).toBe(200);
-                        return [2 /*return*/];
-                }
-            });
-        }); });
-        it("should return 400 response if any attribute is empty", function () { return __awaiter(void 0, void 0, void 0, function () {
-            var response;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, request
-                            .post("/users")
-                            .send({
-                            password: "Sh00000000",
-                            first_name: "Shrief",
-                            last_name: "Essam",
-                        })
-                            .set({
-                            Authorization: "Bearer ".concat(token),
-                        })];
-                    case 1:
-                        response = _a.sent();
-                        expect(response.status).toBe(400);
                         return [2 /*return*/];
                 }
             });

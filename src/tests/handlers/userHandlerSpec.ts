@@ -5,7 +5,7 @@ import { UserStore } from "../../models/userModel";
 
 const request = supertest(app);
 
-describe("testing endpoint response", () => {
+describe("testing users endpoint response", () => {
   let token: string;
   beforeAll(async () => {
     const store = new UserStore();
@@ -50,7 +50,7 @@ describe("testing endpoint response", () => {
     });
 
     it("should return ok response if user enter a valid token", async () => {
-      const response = await request.get("/users/1").set({
+      const response = await request.get("/users/2").set({
         Authorization: `Bearer ${token}`,
       });
       expect(response.status).toBe(200);
