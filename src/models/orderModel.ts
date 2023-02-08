@@ -41,11 +41,11 @@ export class OrderStore {
     }
   }
 
-  async getCompeletedOrdersByUser(userID: string): Promise<Order[]> {
+  async getClosedOrdersByUser(userID: string): Promise<Order[]> {
     try {
       const conn = await clinet.connect();
       const sql = "SELECT * FROM orders WHERE user_id = ($1) AND status = ($2)";
-      const res = await clinet.query(sql, [userID, "compelete"]);
+      const res = await clinet.query(sql, [userID, "close"]);
       conn.release();
       return res.rows;
     } catch (err) {
@@ -63,11 +63,13 @@ export class OrderStore {
       );
       const orderedProducts = resProducts.rows;
       const products: Product[] = [];
-      orderedProducts.map(async (item) => {
-        const sql = "SELECT * FROM products WHERE id=($1)";
-        const res = await clinet.query(sql, [item.id]);
-        products.push(res.rows[0]);
-      });
+      await Promise.all(
+        orderedProducts.map(async (item) => {
+          const sql = "SELECT * FROM products WHERE id=($1)";
+          const res = await clinet.query(sql, [item.id]);
+          products.push(res.rows[0]);
+        })
+      );
       conn.release();
       return products;
     } catch (err) {
@@ -81,6 +83,18 @@ export class OrderStore {
       const sql =
         "INSERT INTO orders (status,user_id) VALUES ($1,$2) RETURNING *";
       const res = await conn.query(sql, [order.status, order.user_id]);
+      conn.release();
+      return res.rows[0];
+    } catch (err) {
+      throw new Error(`could not create new Order. ${err}`);
+    }
+  }
+
+  async closeOrder(orderID: number): Promise<Order> {
+    try {
+      const conn = await clinet.connect();
+      const sql = "UPDATE orders SET status=($1) WHERE id=($2)";
+      const res = await conn.query(sql, ["close", orderID]);
       conn.release();
       return res.rows[0];
     } catch (err) {
