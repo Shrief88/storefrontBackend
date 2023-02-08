@@ -15,6 +15,21 @@ const index = async (_req: Request, res: Response): Promise<void> => {
   }
 };
 
+const create = async (req: Request, res: Response): Promise<void> => {
+  const products: Product[] = [];
+  const order: Order = {
+    status: "open",
+    user_id: req.body.user_id,
+    products,
+  };
+  try {
+    const newOrder = await store.create(order);
+    res.json(newOrder);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
 const getActiveOrdersByUser = async (
   req: Request,
   res: Response
@@ -51,21 +66,6 @@ const showProducts = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const create = async (req: Request, res: Response): Promise<void> => {
-  const products: Product[] = [];
-  const order: Order = {
-    status: "open",
-    user_id: req.body.user_id,
-    products,
-  };
-  try {
-    const newOrder = await store.create(order);
-    res.json(newOrder);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-};
-
 const addProduct = async (req: Request, res: Response): Promise<void> => {
   const orderId: number = parseInt(req.params.id);
   const productId: number = req.body.productId;
@@ -93,6 +93,8 @@ const closeOrder = async (req: Request, res: Response): Promise<void> => {
 const orderRoutes = (app: express.Application): void => {
   app.get("/orders", verifyAuthToken, index as RequestHandler);
   app.get("/orders/:orderID", verifyAuthToken, showProducts as RequestHandler);
+  app.put("/orders/:orderID", verifyAuthToken, closeOrder as RequestHandler);
+  app.post("/orders", verifyAuthToken, create as RequestHandler);
   app.get(
     "/orders/active/:userID",
     verifyAuthToken,
@@ -103,13 +105,11 @@ const orderRoutes = (app: express.Application): void => {
     verifyAuthToken,
     getClosedOrdersByUser as RequestHandler
   );
-  app.post("/orders", verifyAuthToken, create as RequestHandler);
   app.post(
     "/orders/:orderID/products",
     verifyAuthToken,
     addProduct as RequestHandler
   );
-  app.put("/orders/:orderID", verifyAuthToken, closeOrder as RequestHandler);
 };
 
 export default orderRoutes;

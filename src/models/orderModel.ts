@@ -56,22 +56,10 @@ export class OrderStore {
   async getOrderProducts(orderID: string): Promise<Product[]> {
     try {
       const conn = await clinet.connect();
-      const sqlProducts = "SELECT * FROM ordered_products WHERE order_id=($1)";
-      const resProducts: QueryResult<OrderedProduct> = await clinet.query(
-        sqlProducts,
-        [orderID]
-      );
-      const orderedProducts = resProducts.rows;
-      const products: Product[] = [];
-      await Promise.all(
-        orderedProducts.map(async (item) => {
-          const sql = "SELECT * FROM products WHERE id=($1)";
-          const res = await clinet.query(sql, [item.id]);
-          products.push(res.rows[0]);
-        })
-      );
-      conn.release();
-      return products;
+      const sql =
+        "SELECT name,quantity,price FROM products INNER JOIN ordered_products ON products.id = ordered_products.product_id";
+      const res: QueryResult<Product> = await conn.query(sql);
+      return res.rows;
     } catch (err) {
       throw new Error(`could not get products`);
     }

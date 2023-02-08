@@ -61,8 +61,74 @@ var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, func
         }
     });
 }); };
+var getActiveOrdersByUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var userID, orders, err_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                userID = req.params.userID;
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, store.getActiveOrdersByUser(userID)];
+            case 2:
+                orders = _a.sent();
+                res.json(orders);
+                return [3 /*break*/, 4];
+            case 3:
+                err_2 = _a.sent();
+                res.status(400).json({ err: err_2.message });
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
+var getClosedOrdersByUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var userID, orders, err_3;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                userID = req.params.userID;
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, store.getClosedOrdersByUser(userID)];
+            case 2:
+                orders = _a.sent();
+                res.json(orders);
+                return [3 /*break*/, 4];
+            case 3:
+                err_3 = _a.sent();
+                res.status(400).json({ err: err_3.message });
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
+var showProducts = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var orderID, products, err_4;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                orderID = req.params.orderID;
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, store.getOrderProducts(orderID)];
+            case 2:
+                products = _a.sent();
+                res.json(products);
+                return [3 /*break*/, 4];
+            case 3:
+                err_4 = _a.sent();
+                res.status(400).json({ err: err_4.message });
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
 var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var products, order, newOrder, err_2;
+    var products, order, newOrder, err_5;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -81,15 +147,15 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 res.json(newOrder);
                 return [3 /*break*/, 4];
             case 3:
-                err_2 = _a.sent();
-                res.status(400).json({ error: err_2.message });
+                err_5 = _a.sent();
+                res.status(400).json({ error: err_5.message });
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
     });
 }); };
 var addProduct = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var orderId, productId, quantity, addedProduct, err_3;
+    var orderId, productId, quantity, addedProduct, err_6;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -105,17 +171,44 @@ var addProduct = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 res.json(addedProduct);
                 return [3 /*break*/, 4];
             case 3:
-                err_3 = _a.sent();
+                err_6 = _a.sent();
                 res.status(400);
-                res.json(err_3);
+                res.json(err_6);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
+var closeOrder = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var orderId, updatedOrder, err_7;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                orderId = parseInt(req.params.orderID);
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, store.closeOrder(orderId)];
+            case 2:
+                updatedOrder = _a.sent();
+                res.json(updatedOrder);
+                return [3 /*break*/, 4];
+            case 3:
+                err_7 = _a.sent();
+                res.status(400);
+                res.json(err_7);
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
     });
 }); };
 var orderRoutes = function (app) {
-    app.get("/orders", index);
+    app.get("/orders", verifyAuthToken_1.default, index);
+    app.get("/orders/:orderID", verifyAuthToken_1.default, showProducts);
+    app.put("/orders/:orderID", verifyAuthToken_1.default, closeOrder);
     app.post("/orders", verifyAuthToken_1.default, create);
-    app.post("/orders/:id/products", verifyAuthToken_1.default, addProduct);
+    app.get("/orders/active/:userID", verifyAuthToken_1.default, getActiveOrdersByUser);
+    app.get("/orders/close/:userID", verifyAuthToken_1.default, getClosedOrdersByUser);
+    app.post("/orders/:orderID/products", verifyAuthToken_1.default, addProduct);
 };
 exports.default = orderRoutes;
