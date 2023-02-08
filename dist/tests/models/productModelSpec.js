@@ -89,6 +89,27 @@ describe("product model", function () {
         });
     });
     describe("test model methods", function () {
+        describe("index method", function () {
+            it("index method should retern list of users", function () { return __awaiter(void 0, void 0, void 0, function () {
+                var result;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, store.index()];
+                        case 1:
+                            result = _a.sent();
+                            expect(result).toEqual([
+                                {
+                                    id: newProduct.id,
+                                    name: "mobile",
+                                    price: 1000,
+                                    category: "electronics",
+                                },
+                            ]);
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
+        });
         describe("create method", function () {
             it("create method should add a product", function () {
                 expect(newProduct).toEqual({
@@ -168,33 +189,7 @@ describe("product model", function () {
                 });
             }); });
         });
-        it("index method should retern list of users", function () { return __awaiter(void 0, void 0, void 0, function () {
-            var result;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, store.index()];
-                    case 1:
-                        result = _a.sent();
-                        expect(result.length).toEqual(1);
-                        return [2 /*return*/];
-                }
-            });
-        }); });
         describe("getOrderByCategory method", function () {
-            beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, store.create({
-                                name: "t-shrit",
-                                price: 1000,
-                                category: "clothes",
-                            })];
-                        case 1:
-                            _a.sent();
-                            return [2 /*return*/];
-                    }
-                });
-            }); });
             it("should return empty list if category is not found", function () { return __awaiter(void 0, void 0, void 0, function () {
                 var result;
                 return __generator(this, function (_a) {
@@ -211,15 +206,15 @@ describe("product model", function () {
                 var result;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, store.getOrderByCategory("clothes")];
+                        case 0: return [4 /*yield*/, store.getOrderByCategory("electronics")];
                         case 1:
                             result = _a.sent();
                             expect(result).toEqual([
                                 {
                                     id: result[0].id,
-                                    name: "t-shrit",
+                                    name: "mobile",
                                     price: 1000,
-                                    category: "clothes",
+                                    category: "electronics",
                                 },
                             ]);
                             return [2 /*return*/];

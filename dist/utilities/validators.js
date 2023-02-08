@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.stringSchema = exports.numberSchema = exports.authentiacateUserSchema = exports.createUserSchema = void 0;
+exports.categorySchema = exports.IDSchema = exports.authentiacateUserSchema = exports.createProductSchema = exports.createUserSchema = void 0;
 var yup = __importStar(require("yup"));
 var PASSWORD_REGEX = /^[a-zA-Z0-9]{8,}$/;
 exports.createUserSchema = yup.object({
@@ -35,9 +35,16 @@ exports.createUserSchema = yup.object({
         .matches(PASSWORD_REGEX, "password must contain only letters and numbers with a minimum of 8 characters")
         .required(),
 });
+exports.createProductSchema = yup.object({
+    name: yup.string().required().strict().trim(),
+    price: yup.number().required(),
+    category: yup.string().required().strict().trim(),
+});
 exports.authentiacateUserSchema = yup.object({
     email: yup.string().required(),
     password: yup.string().required(),
 });
-exports.numberSchema = yup.object({ id: yup.number().required() });
-exports.stringSchema = yup.object({ id: yup.string().required().trim() });
+exports.IDSchema = yup.object({ id: yup.number().required() });
+exports.categorySchema = yup.object({
+    category: yup.string().required().trim(),
+});

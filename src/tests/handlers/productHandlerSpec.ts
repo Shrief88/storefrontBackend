@@ -48,6 +48,61 @@ describe("testing products endpoint response", () => {
       expect(response.status).toBe(401);
     });
 
+    it("should return 400 response if any required attribute is missing", async () => {
+      const response = await request
+        .post("/products")
+        .send({
+          price: 1000,
+          category: "electronics",
+        })
+        .set({
+          Authorization: `Bearer ${token}`,
+        });
+      expect(response.status).toBe(400);
+    });
+
+    it("should return 400 response if any attribute is empty", async () => {
+      const response = await request
+        .post("/users")
+        .send({
+          name: "",
+          price: 1000,
+          category: "electronics",
+        })
+        .set({
+          Authorization: `Bearer ${token}`,
+        });
+      expect(response.status).toBe(400);
+    });
+
+    it("should return 400 response if price is not number", async () => {
+      const response = await request
+        .post("/users")
+        .send({
+          name: "mobile",
+          price: "1000",
+          category: "electronics",
+        })
+        .set({
+          Authorization: `Bearer ${token}`,
+        });
+      expect(response.status).toBe(400);
+    });
+
+    it("should return 400 response if any string attribute is a number", async () => {
+      const response = await request
+        .post("/users")
+        .send({
+          name: "mobile",
+          price: "1000",
+          category: 123,
+        })
+        .set({
+          Authorization: `Bearer ${token}`,
+        });
+      expect(response.status).toBe(400);
+    });
+
     it("should return ok response if user enter a valid token", async () => {
       const response = await request
         .post("/products")
@@ -71,6 +126,18 @@ describe("testing products endpoint response", () => {
 
     it("should return ok response", async () => {
       const response = await request.get("/products/1");
+      expect(response.status).toBe(200);
+    });
+  });
+
+  describe("test [GET] /products/category/:category endpoint", () => {
+    it("should return not found response if user enter an unvalid input", async () => {
+      const response = await request.get("/products/ffdfd");
+      expect(response.status).toBe(404);
+    });
+
+    it("should return ok response", async () => {
+      const response = await request.get("/products/category/electronics");
       expect(response.status).toBe(200);
     });
   });

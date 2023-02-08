@@ -37,22 +37,21 @@ describe("user model", () => {
     });
   });
 
-  describe("index method", () => {
-    it("index method should retern list of users", async () => {
-      const result = await store.index();
-      expect(result).toEqual([
-        {
-          id: newUser.id,
-          email: "shriefessam1999@gmail.com",
-          first_name: "Shrief",
-          last_name: "Essam",
-          password: newUser.password,
-        },
-      ]);
-    });
-  });
-
   describe("test model methods", () => {
+    describe("index method", () => {
+      it("index method should retern list of users", async () => {
+        const result = await store.index();
+        expect(result).toEqual([
+          {
+            id: newUser.id,
+            email: "shriefessam1999@gmail.com",
+            first_name: "Shrief",
+            last_name: "Essam",
+            password: newUser.password,
+          },
+        ]);
+      });
+    });
     describe("create method", () => {
       it("create method should add a user", () => {
         expect(newUser).toEqual({

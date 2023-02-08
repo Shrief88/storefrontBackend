@@ -122,6 +122,89 @@ describe("testing products endpoint response", function () {
                 }
             });
         }); });
+        it("should return 400 response if any required attribute is missing", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, request
+                            .post("/products")
+                            .send({
+                            price: 1000,
+                            category: "electronics",
+                        })
+                            .set({
+                            Authorization: "Bearer ".concat(token),
+                        })];
+                    case 1:
+                        response = _a.sent();
+                        expect(response.status).toBe(400);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        it("should return 400 response if any attribute is empty", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, request
+                            .post("/users")
+                            .send({
+                            name: "",
+                            price: 1000,
+                            category: "electronics",
+                        })
+                            .set({
+                            Authorization: "Bearer ".concat(token),
+                        })];
+                    case 1:
+                        response = _a.sent();
+                        expect(response.status).toBe(400);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        it("should return 400 response if price is not number", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, request
+                            .post("/users")
+                            .send({
+                            name: "mobile",
+                            price: "1000",
+                            category: "electronics",
+                        })
+                            .set({
+                            Authorization: "Bearer ".concat(token),
+                        })];
+                    case 1:
+                        response = _a.sent();
+                        expect(response.status).toBe(400);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        it("should return 400 response if any string attribute is a number", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, request
+                            .post("/users")
+                            .send({
+                            name: "mobile",
+                            price: "1000",
+                            category: 123,
+                        })
+                            .set({
+                            Authorization: "Bearer ".concat(token),
+                        })];
+                    case 1:
+                        response = _a.sent();
+                        expect(response.status).toBe(400);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
         it("should return ok response if user enter a valid token", function () { return __awaiter(void 0, void 0, void 0, function () {
             var response;
             return __generator(this, function (_a) {
@@ -162,6 +245,32 @@ describe("testing products endpoint response", function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, request.get("/products/1")];
+                    case 1:
+                        response = _a.sent();
+                        expect(response.status).toBe(200);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+    });
+    describe("test [GET] /products/category/:category endpoint", function () {
+        it("should return not found response if user enter an unvalid input", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, request.get("/products/ffdfd")];
+                    case 1:
+                        response = _a.sent();
+                        expect(response.status).toBe(404);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        it("should return ok response", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, request.get("/products/category/electronics")];
                     case 1:
                         response = _a.sent();
                         expect(response.status).toBe(200);

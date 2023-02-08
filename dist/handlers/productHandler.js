@@ -41,6 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var productModel_1 = require("../models/productModel");
 var verifyAuthToken_1 = __importDefault(require("../middlewares/verifyAuthToken"));
+var validators_1 = require("../utilities/validators");
 var store = new productModel_1.ProductStore();
 var index = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var products, err_1;
@@ -62,24 +63,25 @@ var index = function (req, res) { return __awaiter(void 0, void 0, void 0, funct
     });
 }); };
 var show = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, err_2;
+    var input, user, err_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
-                if (isNaN(parseInt(req.params.id))) {
-                    throw new Error("you should provide a number as id");
-                }
-                return [4 /*yield*/, store.show(parseInt(req.params.id))];
+                input = { id: parseInt(req.params.id) };
+                _a.label = 1;
             case 1:
+                _a.trys.push([1, 3, , 4]);
+                validators_1.IDSchema.validateSync(input);
+                return [4 /*yield*/, store.show(parseInt(req.params.id))];
+            case 2:
                 user = _a.sent();
                 res.json(user);
-                return [3 /*break*/, 3];
-            case 2:
+                return [3 /*break*/, 4];
+            case 3:
                 err_2 = _a.sent();
                 res.status(404).json({ error: err_2.message });
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); };
@@ -96,6 +98,7 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
+                validators_1.createProductSchema.validateSync(product);
                 return [4 /*yield*/, store.create(product)];
             case 2:
                 newProduct = _a.sent();
@@ -110,21 +113,25 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
     });
 }); };
 var getOrderByCategory = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var products, err_4;
+    var input, products, err_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, store.getOrderByCategory(req.params.category)];
+                input = { category: req.params.category };
+                _a.label = 1;
             case 1:
+                _a.trys.push([1, 3, , 4]);
+                validators_1.categorySchema.validateSync(input);
+                return [4 /*yield*/, store.getOrderByCategory(req.params.category)];
+            case 2:
                 products = _a.sent();
                 res.json(products);
-                return [3 /*break*/, 3];
-            case 2:
+                return [3 /*break*/, 4];
+            case 3:
                 err_4 = _a.sent();
                 res.status(400).json({ error: err_4.message });
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); };

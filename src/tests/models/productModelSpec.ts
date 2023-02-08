@@ -36,6 +36,19 @@ describe("product model", () => {
   });
 
   describe("test model methods", () => {
+    describe("index method", () => {
+      it("index method should retern list of users", async () => {
+        const result = await store.index();
+        expect(result).toEqual([
+          {
+            id: newProduct.id,
+            name: "mobile",
+            price: 1000,
+            category: "electronics",
+          },
+        ]);
+      });
+    });
     describe("create method", () => {
       it("create method should add a product", () => {
         expect(newProduct).toEqual({
@@ -87,32 +100,20 @@ describe("product model", () => {
       });
     });
 
-    it("index method should retern list of users", async () => {
-      const result = await store.index();
-      expect(result.length).toEqual(1);
-    });
-
     describe("getOrderByCategory method", () => {
-      beforeAll(async () => {
-        await store.create({
-          name: "t-shrit",
-          price: 1000,
-          category: "clothes",
-        });
-      });
       it("should return empty list if category is not found", async () => {
         const result = await store.getOrderByCategory("books");
         expect(result).toEqual([]);
       });
 
       it("should return the right orders by category", async () => {
-        const result = await store.getOrderByCategory("clothes");
+        const result = await store.getOrderByCategory("electronics");
         expect(result).toEqual([
           {
             id: result[0].id,
-            name: "t-shrit",
+            name: "mobile",
             price: 1000,
-            category: "clothes",
+            category: "electronics",
           },
         ]);
       });

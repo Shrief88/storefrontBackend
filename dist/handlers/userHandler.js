@@ -75,7 +75,7 @@ var show = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                validators_1.numberSchema.validateSync(input);
+                validators_1.IDSchema.validateSync(input);
                 return [4 /*yield*/, store.show(parseInt(req.params.id))];
             case 2:
                 user = _a.sent();

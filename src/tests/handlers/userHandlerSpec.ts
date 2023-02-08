@@ -90,7 +90,7 @@ describe("testing users endpoint response", () => {
       expect(response.status).toBe(200);
     });
 
-    it("should return 400 response if any attribute is missing", async () => {
+    it("should return 400 response if any required attribute is missing", async () => {
       const response = await request
         .post("/users")
         .send({
@@ -105,6 +105,21 @@ describe("testing users endpoint response", () => {
     });
 
     it("should return 400 response if any attribute is empty", async () => {
+      const response = await request
+        .post("/users")
+        .send({
+          email: "shriefessam1888@gmail.com",
+          password: "Sh00000000",
+          first_name: "",
+          last_name: "Essam",
+        })
+        .set({
+          Authorization: `Bearer ${token}`,
+        });
+      expect(response.status).toBe(400);
+    });
+
+    it("should return 400 response if any string attribute is a number", async () => {
       const response = await request
         .post("/users")
         .send({

@@ -197,7 +197,7 @@ describe("testing users endpoint response", function () {
                 }
             });
         }); });
-        it("should return 400 response if any attribute is missing", function () { return __awaiter(void 0, void 0, void 0, function () {
+        it("should return 400 response if any required attribute is missing", function () { return __awaiter(void 0, void 0, void 0, function () {
             var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -219,6 +219,28 @@ describe("testing users endpoint response", function () {
             });
         }); });
         it("should return 400 response if any attribute is empty", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, request
+                            .post("/users")
+                            .send({
+                            email: "shriefessam1888@gmail.com",
+                            password: "Sh00000000",
+                            first_name: "",
+                            last_name: "Essam",
+                        })
+                            .set({
+                            Authorization: "Bearer ".concat(token),
+                        })];
+                    case 1:
+                        response = _a.sent();
+                        expect(response.status).toBe(400);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        it("should return 400 response if any string attribute is a number", function () { return __awaiter(void 0, void 0, void 0, function () {
             var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {

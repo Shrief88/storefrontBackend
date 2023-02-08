@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 import verifyAuthToken from "../middlewares/verifyAuthToken";
 import {
   createUserSchema,
-  numberSchema,
+  IDSchema,
   authentiacateUserSchema,
 } from "../utilities/validators";
 
@@ -27,7 +27,7 @@ const index = async (_req: Request, res: Response): Promise<void> => {
 const show = async (req: Request, res: Response): Promise<void> => {
   const input: { id: number } = { id: parseInt(req.params.id) };
   try {
-    numberSchema.validateSync(input);
+    IDSchema.validateSync(input);
     const user = await store.show(parseInt(req.params.id));
     res.json(user);
   } catch (err) {
