@@ -70,4 +70,17 @@ export class ProductStore {
       throw new Error(`could not get products. ${err}`);
     }
   }
+
+  async getTopFive(): Promise<Product[]> {
+    try {
+      const conn = await clinet.connect();
+      const sql =
+        "(SELECT name product_id,COUNT(product_id) CN FROM products INNER JOIN ordered_products ON products.id = ordered_products.product_id GROUP BY name) ORDER BY CN DESC LIMIT 5";
+      const res = await conn.query(sql);
+      conn.release();
+      return res.rows;
+    } catch (err) {
+      throw new Error(`could not get products. ${err}`);
+    }
+  }
 }

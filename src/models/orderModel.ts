@@ -57,8 +57,8 @@ export class OrderStore {
     try {
       const conn = await clinet.connect();
       const sql =
-        "SELECT name,quantity,price FROM products INNER JOIN ordered_products ON products.id = ordered_products.product_id";
-      const res: QueryResult<Product> = await conn.query(sql);
+        "SELECT name,quantity,price FROM products INNER JOIN ordered_products ON products.id = ordered_products.product_id WHERE order_id=($1)";
+      const res: QueryResult<Product> = await conn.query(sql, [orderID]);
       return res.rows;
     } catch (err) {
       throw new Error(`could not get products`);

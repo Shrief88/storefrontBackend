@@ -67,7 +67,7 @@ const showProducts = async (req: Request, res: Response): Promise<void> => {
 };
 
 const addProduct = async (req: Request, res: Response): Promise<void> => {
-  const orderId: number = parseInt(req.params.id);
+  const orderId: number = parseInt(req.params.orderID);
   const productId: number = req.body.productId;
   const quantity: number = parseInt(req.body.quantity);
   try {

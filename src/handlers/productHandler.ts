@@ -52,11 +52,21 @@ const getOrderByCategory = async (
   }
 };
 
+const getTopFive = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const products = await store.getTopFive();
+    res.json(products);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
 const productRoutes = (app: express.Application): void => {
   app.get("/products", index as RequestHandler);
   app.post("/products", verifyAuthToken, create as RequestHandler);
   app.get("/products/:id", show as RequestHandler);
   app.get("/products/category/:category", getOrderByCategory as RequestHandler);
+  app.get("/products/top/five", getTopFive as RequestHandler);
 };
 
 export default productRoutes;
