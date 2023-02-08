@@ -33,13 +33,6 @@ const create = async (req: Request, res: Response): Promise<void> => {
     category: req.body.category,
   };
   try {
-    // if (
-    //   product.name === "" ||
-    //   product.price === "" ||
-    //   product.category === "" ||
-    // ) {
-    //   throw new Error("you should provide all user attributes");
-    // }
     const newProduct = await store.create(product);
     res.json(newProduct);
   } catch (err) {

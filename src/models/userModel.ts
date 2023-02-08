@@ -42,12 +42,12 @@ export class UserStore {
   async create(user: User): Promise<User> {
     try {
       const conn = await clinet.connect();
-      let sql: string = "SELECT * FROM users WHERE email=$1";
-      let res: QueryResult<User> = await conn.query(sql, [user.email]);
+      const sqlUsers = "SELECT * FROM users WHERE email=$1";
+      let res: QueryResult<User> = await conn.query(sqlUsers, [user.email]);
       if (res.rowCount !== 0) {
         throw new Error("email is already used!");
       }
-      sql =
+      const sql =
         "INSERT INTO users (email,first_name,last_name,password) VALUES ($1,$2,$3,$4) RETURNING *";
       const hash = hashPassword(user.password);
       res = await conn.query(sql, [
