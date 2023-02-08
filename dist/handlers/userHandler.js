@@ -40,10 +40,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var userModel_1 = require("../models/userModel");
-var emailValidation_1 = require("../utilities/emailValidation");
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var dotenv_1 = __importDefault(require("dotenv"));
 var verifyAuthToken_1 = __importDefault(require("../middlewares/verifyAuthToken"));
+var validators_1 = require("../utilities/validators");
 dotenv_1.default.config();
 var TOKEN_SECRET = process.env.TOKEN_SECRET;
 var store = new userModel_1.UserStore();
@@ -67,24 +67,25 @@ var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, func
     });
 }); };
 var show = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, err_2;
+    var input, user, err_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
-                if (isNaN(parseInt(req.params.id))) {
-                    throw new Error("you should provide a number as id");
-                }
-                return [4 /*yield*/, store.show(parseInt(req.params.id))];
+                input = { id: parseInt(req.params.id) };
+                _a.label = 1;
             case 1:
+                _a.trys.push([1, 3, , 4]);
+                validators_1.numberSchema.validateSync(input);
+                return [4 /*yield*/, store.show(parseInt(req.params.id))];
+            case 2:
                 user = _a.sent();
                 res.json(user);
-                return [3 /*break*/, 3];
-            case 2:
+                return [3 /*break*/, 4];
+            case 3:
                 err_2 = _a.sent();
                 res.status(404).json({ error: err_2.message });
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); };
@@ -102,15 +103,7 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                if (user.email === "" ||
-                    user.first_name === "" ||
-                    user.last_name === "" ||
-                    user.password === "") {
-                    throw new Error("you should provide all user attributes");
-                }
-                if (!(0, emailValidation_1.validateEmail)(user.email)) {
-                    throw new Error("you should provide a valid email address");
-                }
+                validators_1.createUserSchema.validateSync(user);
                 return [4 /*yield*/, store.create(user)];
             case 2:
                 newUser = _a.sent();
@@ -125,22 +118,29 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
     });
 }); };
 var authenticate = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, token, err_4;
+    var input, user, token, err_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, store.authenticate(req.body.email, req.body.password)];
+                input = {
+                    email: req.body.email,
+                    password: req.body.password,
+                };
+                _a.label = 1;
             case 1:
+                _a.trys.push([1, 3, , 4]);
+                validators_1.authentiacateUserSchema.validateSync(input);
+                return [4 /*yield*/, store.authenticate(req.body.email, req.body.password)];
+            case 2:
                 user = _a.sent();
                 token = jsonwebtoken_1.default.sign({ user: user }, TOKEN_SECRET);
                 res.json(token);
-                return [3 /*break*/, 3];
-            case 2:
+                return [3 /*break*/, 4];
+            case 3:
                 err_4 = _a.sent();
                 res.status(400).json({ error: err_4.message });
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); };

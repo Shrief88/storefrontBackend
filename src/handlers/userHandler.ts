@@ -4,7 +4,11 @@ import { type User, UserStore } from "../models/userModel";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import verifyAuthToken from "../middlewares/verifyAuthToken";
-import { createUserSchema } from "../utilities/validators";
+import {
+  createUserSchema,
+  numberSchema,
+  authentiacateUserSchema,
+} from "../utilities/validators";
 
 dotenv.config();
 const { TOKEN_SECRET } = process.env;
@@ -21,10 +25,9 @@ const index = async (_req: Request, res: Response): Promise<void> => {
 };
 
 const show = async (req: Request, res: Response): Promise<void> => {
+  const input: { id: number } = { id: parseInt(req.params.id) };
   try {
-    if (isNaN(parseInt(req.params.id))) {
-      throw new Error("you should provide a number as id");
-    }
+    numberSchema.validateSync(input);
     const user = await store.show(parseInt(req.params.id));
     res.json(user);
   } catch (err) {
@@ -49,7 +52,12 @@ const create = async (req: Request, res: Response): Promise<void> => {
 };
 
 const authenticate = async (req: Request, res: Response): Promise<void> => {
+  const input: { email: string; password: string } = {
+    email: req.body.email,
+    password: req.body.password,
+  };
   try {
+    authentiacateUserSchema.validateSync(input);
     const user = await store.authenticate(req.body.email, req.body.password);
     const token = jwt.sign({ user }, TOKEN_SECRET as string);
     res.json(token);

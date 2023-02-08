@@ -5,8 +5,8 @@ const PASSWORD_REGEX = /^[a-zA-Z0-9]{8,}$/;
 
 export const createUserSchema: yup.Schema<User> = yup.object({
   email: yup.string().required().email(),
-  first_name: yup.string().required().strict(),
-  last_name: yup.string().required().strict(),
+  first_name: yup.string().required().strict().trim(),
+  last_name: yup.string().required().strict().trim(),
   password: yup
     .string()
     .matches(
@@ -15,3 +15,11 @@ export const createUserSchema: yup.Schema<User> = yup.object({
     )
     .required(),
 });
+
+export const authentiacateUserSchema = yup.object({
+  email: yup.string().required(),
+  password: yup.string().required(),
+});
+
+export const numberSchema = yup.object({ id: yup.number().required() });
+export const stringSchema = yup.object({ id: yup.string().required().trim() });
