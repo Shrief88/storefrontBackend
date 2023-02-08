@@ -61,74 +61,8 @@ var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, func
         }
     });
 }); };
-var getActiveOrdersByUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userID, orders, err_2;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                userID = req.params.userID;
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, store.getActiveOrdersByUser(userID)];
-            case 2:
-                orders = _a.sent();
-                res.json(orders);
-                return [3 /*break*/, 4];
-            case 3:
-                err_2 = _a.sent();
-                res.status(400).json({ err: err_2.message });
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
-        }
-    });
-}); };
-var getClosedOrdersByUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userID, orders, err_3;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                userID = req.params.userID;
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, store.getClosedOrdersByUser(userID)];
-            case 2:
-                orders = _a.sent();
-                res.json(orders);
-                return [3 /*break*/, 4];
-            case 3:
-                err_3 = _a.sent();
-                res.status(400).json({ err: err_3.message });
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
-        }
-    });
-}); };
-var showProducts = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var orderID, products, err_4;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                orderID = req.params.orderID;
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, store.getOrderProducts(orderID)];
-            case 2:
-                products = _a.sent();
-                res.json(products);
-                return [3 /*break*/, 4];
-            case 3:
-                err_4 = _a.sent();
-                res.status(400).json({ err: err_4.message });
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
-        }
-    });
-}); };
 var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var products, order, newOrder, err_5;
+    var products, order, newOrder, err_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -147,8 +81,74 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 res.json(newOrder);
                 return [3 /*break*/, 4];
             case 3:
+                err_2 = _a.sent();
+                res.status(400).json({ error: err_2.message });
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
+var getActiveOrdersByUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var userID, orders, err_3;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                userID = req.params.userID;
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, store.getActiveOrdersByUser(userID)];
+            case 2:
+                orders = _a.sent();
+                res.json(orders);
+                return [3 /*break*/, 4];
+            case 3:
+                err_3 = _a.sent();
+                res.status(400).json({ err: err_3.message });
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
+var getClosedOrdersByUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var userID, orders, err_4;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                userID = req.params.userID;
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, store.getClosedOrdersByUser(userID)];
+            case 2:
+                orders = _a.sent();
+                res.json(orders);
+                return [3 /*break*/, 4];
+            case 3:
+                err_4 = _a.sent();
+                res.status(400).json({ err: err_4.message });
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
+var showProducts = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var orderID, products, err_5;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                orderID = req.params.orderID;
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, store.getOrderProducts(orderID)];
+            case 2:
+                products = _a.sent();
+                res.json(products);
+                return [3 /*break*/, 4];
+            case 3:
                 err_5 = _a.sent();
-                res.status(400).json({ error: err_5.message });
+                res.status(400).json({ err: err_5.message });
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
@@ -159,7 +159,7 @@ var addProduct = function (req, res) { return __awaiter(void 0, void 0, void 0, 
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                orderId = parseInt(req.params.id);
+                orderId = parseInt(req.params.orderID);
                 productId = req.body.productId;
                 quantity = parseInt(req.body.quantity);
                 _a.label = 1;

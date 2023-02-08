@@ -1,10 +1,10 @@
 import { type RequestHandler, type Request, type Response } from "express";
 import type express from "express";
 import { type User, UserStore } from "../models/userModel";
-import { validateEmail } from "../utilities/emailValidation";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import verifyAuthToken from "../middlewares/verifyAuthToken";
+import { createUserSchema } from "../utilities/validators";
 
 dotenv.config();
 const { TOKEN_SECRET } = process.env;
@@ -40,19 +40,7 @@ const create = async (req: Request, res: Response): Promise<void> => {
     password: req.body.password,
   };
   try {
-    if (
-      user.email === "" ||
-      user.first_name === "" ||
-      user.last_name === "" ||
-      user.password === ""
-    ) {
-      throw new Error("you should provide all user attributes");
-    }
-
-    if (!validateEmail(user.email)) {
-      throw new Error("you should provide a valid email address");
-    }
-
+    createUserSchema.validateSync(user);
     const newUser = await store.create(user);
     res.json(newUser);
   } catch (err) {

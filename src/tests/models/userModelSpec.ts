@@ -37,6 +37,21 @@ describe("user model", () => {
     });
   });
 
+  describe("index method", () => {
+    it("index method should retern list of users", async () => {
+      const result = await store.index();
+      expect(result).toEqual([
+        {
+          id: newUser.id,
+          email: "shriefessam1999@gmail.com",
+          first_name: "Shrief",
+          last_name: "Essam",
+          password: newUser.password,
+        },
+      ]);
+    });
+  });
+
   describe("test model methods", () => {
     describe("create method", () => {
       it("create method should add a user", () => {
@@ -134,11 +149,6 @@ describe("user model", () => {
           "could not sign in. Error: Invalid password"
         );
       });
-    });
-
-    it("index method should retern list of users", async () => {
-      const result = await store.index();
-      expect(result.length).toEqual(1);
     });
   });
 });

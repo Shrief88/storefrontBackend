@@ -90,6 +90,28 @@ describe("user model", function () {
             expect(store.authenticate).toBeDefined();
         });
     });
+    describe("index method", function () {
+        it("index method should retern list of users", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, store.index()];
+                    case 1:
+                        result = _a.sent();
+                        expect(result).toEqual([
+                            {
+                                id: newUser.id,
+                                email: "shriefessam1999@gmail.com",
+                                first_name: "Shrief",
+                                last_name: "Essam",
+                                password: newUser.password,
+                            },
+                        ]);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+    });
     describe("test model methods", function () {
         describe("create method", function () {
             it("create method should add a user", function () {
@@ -242,17 +264,5 @@ describe("user model", function () {
                 });
             }); });
         });
-        it("index method should retern list of users", function () { return __awaiter(void 0, void 0, void 0, function () {
-            var result;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, store.index()];
-                    case 1:
-                        result = _a.sent();
-                        expect(result.length).toEqual(1);
-                        return [2 /*return*/];
-                }
-            });
-        }); });
     });
 });

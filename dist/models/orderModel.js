@@ -118,43 +118,23 @@ var OrderStore = /** @class */ (function () {
     };
     OrderStore.prototype.getOrderProducts = function (orderID) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, sqlProducts, resProducts, orderedProducts, products_1, err_4;
-            var _this = this;
+            var conn, sql, res, err_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 4, , 5]);
+                        _a.trys.push([0, 3, , 4]);
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sqlProducts = "SELECT * FROM ordered_products WHERE order_id=($1)";
-                        return [4 /*yield*/, database_1.default.query(sqlProducts, [orderID])];
+                        sql = "SELECT name,quantity,price FROM products INNER JOIN ordered_products ON products.id = ordered_products.product_id WHERE order_id=($1)";
+                        return [4 /*yield*/, conn.query(sql, [orderID])];
                     case 2:
-                        resProducts = _a.sent();
-                        orderedProducts = resProducts.rows;
-                        products_1 = [];
-                        return [4 /*yield*/, Promise.all(orderedProducts.map(function (item) { return __awaiter(_this, void 0, void 0, function () {
-                                var sql, res;
-                                return __generator(this, function (_a) {
-                                    switch (_a.label) {
-                                        case 0:
-                                            sql = "SELECT * FROM products WHERE id=($1)";
-                                            return [4 /*yield*/, database_1.default.query(sql, [item.id])];
-                                        case 1:
-                                            res = _a.sent();
-                                            products_1.push(res.rows[0]);
-                                            return [2 /*return*/];
-                                    }
-                                });
-                            }); }))];
+                        res = _a.sent();
+                        return [2 /*return*/, res.rows];
                     case 3:
-                        _a.sent();
-                        conn.release();
-                        return [2 /*return*/, products_1];
-                    case 4:
                         err_4 = _a.sent();
                         throw new Error("could not get products");
-                    case 5: return [2 /*return*/];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
