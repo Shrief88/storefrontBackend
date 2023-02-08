@@ -15,10 +15,26 @@ const index = async (_req: Request, res: Response): Promise<void> => {
   }
 };
 
-const getOrdersByUser = async (req: Request, res: Response): Promise<void> => {
+const getActiveOrdersByUser = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const userID = req.body.userID;
   try {
-    const orders = await store.getOrdersByUser(userID);
+    const orders = await store.getActiveOrdersByUser(userID);
+    res.json(orders);
+  } catch (err) {
+    res.status(400).json({ err: err.message });
+  }
+};
+
+const getCompeletedOrdersByUser = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const userID = req.body.userID;
+  try {
+    const orders = await store.getActiveOrdersByUser(userID);
     res.json(orders);
   } catch (err) {
     res.status(400).json({ err: err.message });
@@ -64,9 +80,18 @@ const addProduct = async (req: Request, res: Response): Promise<void> => {
 };
 
 const orderRoutes = (app: express.Application): void => {
-  app.get("/orders", index as RequestHandler);
-  app.get("/orders/:id", showProducts as RequestHandler);
-  app.get("/orders/user/:id", getOrdersByUser as RequestHandler);
+  app.get("/orders", verifyAuthToken, index as RequestHandler);
+  app.get("/orders/:id", verifyAuthToken, showProducts as RequestHandler);
+  app.get(
+    "/orders/active/:id",
+    verifyAuthToken,
+    getActiveOrdersByUser as RequestHandler
+  );
+  app.get(
+    "/orders/close:id",
+    verifyAuthToken,
+    getCompeletedOrdersByUser as RequestHandler
+  );
   app.post("/orders", verifyAuthToken, create as RequestHandler);
   app.post(
     "/orders/:id/products",

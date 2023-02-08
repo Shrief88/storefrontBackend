@@ -29,11 +29,23 @@ export class OrderStore {
     }
   }
 
-  async getOrdersByUser(userID: string): Promise<Order[]> {
+  async getActiveOrdersByUser(userID: string): Promise<Order[]> {
     try {
       const conn = await clinet.connect();
-      const sql = "SELECT * FROM orders WHERE user_id = ($1)";
-      const res = await clinet.query(sql, [userID]);
+      const sql = "SELECT * FROM orders WHERE user_id = ($1) AND status = ($2)";
+      const res = await clinet.query(sql, [userID, "open"]);
+      conn.release();
+      return res.rows;
+    } catch (err) {
+      throw new Error(`could not get orders`);
+    }
+  }
+
+  async getCompeletedOrdersByUser(userID: string): Promise<Order[]> {
+    try {
+      const conn = await clinet.connect();
+      const sql = "SELECT * FROM orders WHERE user_id = ($1) AND status = ($2)";
+      const res = await clinet.query(sql, [userID, "compelete"]);
       conn.release();
       return res.rows;
     } catch (err) {
