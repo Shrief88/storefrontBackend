@@ -3,9 +3,14 @@ import bodyParser from "body-parser";
 import userRoutes from "./handlers/userHandler";
 import productRoutes from "./handlers/productHandler";
 import orderRoutes from "./handlers/orderHandler";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const { PORT } = process.env;
 
 const app = express();
-const port = 3030;
+const port = parseInt(PORT as string);
 const host = "localhost";
 
 app.use(bodyParser.json());
