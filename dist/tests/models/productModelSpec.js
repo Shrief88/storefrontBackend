@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var database_1 = __importDefault(require("../../database"));
 var productModel_1 = require("../../models/productModel");
 var store = new productModel_1.ProductStore();
-xdescribe("product model", function () {
+describe("product model", function () {
     var newProduct;
     beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {

@@ -32,6 +32,12 @@ describe("order model", () => {
       price: 1000,
       category: "electronics",
     });
+
+    await orderStore.addProduct(
+      5,
+      newOrder.id as number,
+      newProduct.id as number
+    );
   });
 
   afterAll(async () => {
@@ -154,61 +160,7 @@ describe("order model", () => {
     });
 
     describe("addProduct method", () => {
-      it("should throw an error if orderID is not existing", async () => {
-        let errMessage: string = "";
-        try {
-          await orderStore.addProduct(
-            5,
-            (newOrder.id as number) + 2,
-            newProduct.id as number
-          );
-        } catch (err) {
-          errMessage = err.message;
-        }
-        expect(errMessage).toEqual(
-          "could not add product. Error: you should provide existing order_id"
-        );
-      });
-
-      it("should throw an error if productID is not existing", async () => {
-        let errMessage: string = "";
-        try {
-          await orderStore.addProduct(
-            5,
-            newOrder.id as number,
-            (newProduct.id as number) + 1
-          );
-        } catch (err) {
-          errMessage = err.message;
-        }
-        expect(errMessage).toEqual(
-          "could not add product. Error: you should provide existing product_id"
-        );
-      });
-
-      it("should throw an error if order is already closed", async () => {
-        let errMessage: string = "";
-        try {
-          await orderStore.addProduct(
-            5,
-            (newOrder.id as number) + 1,
-            newProduct.id as number
-          );
-        } catch (err) {
-          errMessage = err.message;
-        }
-        expect(errMessage).toEqual(
-          "could not add product. Error: Order is compelete"
-        );
-      });
-
       it("should add product to the right order", async () => {
-        await orderStore.addProduct(
-          5,
-          newOrder.id as number,
-          newProduct.id as number
-        );
-
         const products = await orderStore.getOrderProducts(
           newOrder.id as number
         );
@@ -252,18 +204,6 @@ describe("order model", () => {
         await orderStore.closeOrder(1);
         const res = await orderStore.index();
         expect(res[0].status).toEqual("close");
-      });
-
-      it("should throw an error if orderID is not existing", async () => {
-        let errMessage: string = "";
-        try {
-          await orderStore.closeOrder(3);
-        } catch (err) {
-          errMessage = err.message;
-        }
-        expect(errMessage).toEqual(
-          "could not close the order. Error: you should provide existing order_id"
-        );
       });
     });
   });

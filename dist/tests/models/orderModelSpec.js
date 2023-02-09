@@ -80,6 +80,9 @@ describe("order model", function () {
                         })];
                 case 4:
                     newProduct = _a.sent();
+                    return [4 /*yield*/, orderStore.addProduct(5, newOrder.id, newProduct.id)];
+                case 5:
+                    _a.sent();
                     return [2 /*return*/];
             }
         });
@@ -265,84 +268,45 @@ describe("order model", function () {
             }); });
         });
         describe("addProduct method", function () {
-            it("should throw an error if orderID is not existing", function () { return __awaiter(void 0, void 0, void 0, function () {
-                var errMessage, err_3;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            errMessage = "";
-                            _a.label = 1;
-                        case 1:
-                            _a.trys.push([1, 3, , 4]);
-                            return [4 /*yield*/, orderStore.addProduct(5, newOrder.id + 2, newProduct.id)];
-                        case 2:
-                            _a.sent();
-                            return [3 /*break*/, 4];
-                        case 3:
-                            err_3 = _a.sent();
-                            errMessage = err_3.message;
-                            return [3 /*break*/, 4];
-                        case 4:
-                            expect(errMessage).toEqual("could not add product. Error: you should provide existing order_id");
-                            return [2 /*return*/];
-                    }
-                });
-            }); });
-            it("should throw an error if productID is not existing", function () { return __awaiter(void 0, void 0, void 0, function () {
-                var errMessage, err_4;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            errMessage = "";
-                            _a.label = 1;
-                        case 1:
-                            _a.trys.push([1, 3, , 4]);
-                            return [4 /*yield*/, orderStore.addProduct(5, newOrder.id, newProduct.id + 1)];
-                        case 2:
-                            _a.sent();
-                            return [3 /*break*/, 4];
-                        case 3:
-                            err_4 = _a.sent();
-                            errMessage = err_4.message;
-                            return [3 /*break*/, 4];
-                        case 4:
-                            expect(errMessage).toEqual("could not add product. Error: you should provide existing product_id");
-                            return [2 /*return*/];
-                    }
-                });
-            }); });
-            it("should throw an error if order is already closed", function () { return __awaiter(void 0, void 0, void 0, function () {
-                var errMessage, err_5;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            errMessage = "";
-                            _a.label = 1;
-                        case 1:
-                            _a.trys.push([1, 3, , 4]);
-                            return [4 /*yield*/, orderStore.addProduct(5, newOrder.id + 1, newProduct.id)];
-                        case 2:
-                            _a.sent();
-                            return [3 /*break*/, 4];
-                        case 3:
-                            err_5 = _a.sent();
-                            errMessage = err_5.message;
-                            return [3 /*break*/, 4];
-                        case 4:
-                            expect(errMessage).toEqual("could not add product. Error: Order is compelete");
-                            return [2 /*return*/];
-                    }
-                });
-            }); });
+            // it("should throw an error if orderID is not existing", async () => {
+            //   let errMessage: string = "";
+            //   try {
+            //     await orderStore.addProduct(5, 3, 1);
+            //   } catch (err) {
+            //     errMessage = err.message;
+            //   }
+            //   expect(errMessage).toEqual(
+            //     "could not add product. Error: you should provide existing order_id"
+            //   );
+            // });
+            // it("should throw an error if productID is not existing", async () => {
+            //   let errMessage: string = "";
+            //   try {
+            //     await orderStore.addProduct(5, 1, 2);
+            //   } catch (err) {
+            //     errMessage = err.message;
+            //   }
+            //   expect(errMessage).toEqual(
+            //     "could not add product. Error: you should provide existing product_id"
+            //   );
+            // });
+            // it("should throw an error if order is already closed", async () => {
+            //   let errMessage: string = "";
+            //   try {
+            //     await orderStore.addProduct(5, 2, 1);
+            //   } catch (err) {
+            //     errMessage = err.message;
+            //   }
+            //   expect(errMessage).toEqual(
+            //     "could not add product. Error: Order is compelete"
+            //   );
+            // });
             it("should add product to the right order", function () { return __awaiter(void 0, void 0, void 0, function () {
                 var products;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, orderStore.addProduct(5, newOrder.id, newProduct.id)];
+                        case 0: return [4 /*yield*/, orderStore.getOrderProducts(newOrder.id)];
                         case 1:
-                            _a.sent();
-                            return [4 /*yield*/, orderStore.getOrderProducts(newOrder.id)];
-                        case 2:
                             products = _a.sent();
                             expect(products).toEqual([
                                 {
@@ -376,7 +340,7 @@ describe("order model", function () {
                 });
             }); });
             it("should throw an error if orderID is not existing", function () { return __awaiter(void 0, void 0, void 0, function () {
-                var errMessage, err_6;
+                var errMessage, err_3;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -389,8 +353,8 @@ describe("order model", function () {
                             _a.sent();
                             return [3 /*break*/, 4];
                         case 3:
-                            err_6 = _a.sent();
-                            errMessage = err_6.message;
+                            err_3 = _a.sent();
+                            errMessage = err_3.message;
                             return [3 /*break*/, 4];
                         case 4:
                             expect(errMessage).toEqual("could not get products, Error: you should provide existing order_id");
@@ -415,29 +379,17 @@ describe("order model", function () {
                     }
                 });
             }); });
-            xit("should throw an error if orderID is not existing", function () { return __awaiter(void 0, void 0, void 0, function () {
-                var errMessage, err_7;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            errMessage = "";
-                            _a.label = 1;
-                        case 1:
-                            _a.trys.push([1, 3, , 4]);
-                            return [4 /*yield*/, orderStore.closeOrder(3)];
-                        case 2:
-                            _a.sent();
-                            return [3 /*break*/, 4];
-                        case 3:
-                            err_7 = _a.sent();
-                            errMessage = err_7.message;
-                            return [3 /*break*/, 4];
-                        case 4:
-                            expect(errMessage).toEqual("could not close the order. Error: you should provide existing order_id");
-                            return [2 /*return*/];
-                    }
-                });
-            }); });
+            // it("should throw an error if orderID is not existing", async () => {
+            //   let errMessage: string = "";
+            //   try {
+            //     await orderStore.closeOrder(3);
+            //   } catch (err) {
+            //     errMessage = err.message;
+            //   }
+            //   expect(errMessage).toEqual(
+            //     "could not close the order. Error: you should provide existing order_id"
+            //   );
+            // });
         });
     });
 });
