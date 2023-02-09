@@ -70,71 +70,94 @@ var OrderStore = /** @class */ (function () {
     };
     OrderStore.prototype.getActiveOrdersByUser = function (userID) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, sql, res, err_2;
+            var conn, sqlUsers, users, sql, res, err_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
+                        _a.trys.push([0, 4, , 5]);
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
+                        sqlUsers = "SELECT * FROM users WHERE id=($1)";
+                        return [4 /*yield*/, conn.query(sqlUsers, [userID])];
+                    case 2:
+                        users = _a.sent();
+                        if (users.rowCount === 0) {
+                            throw new Error("you should provide existing user_id");
+                        }
                         sql = "SELECT * FROM orders WHERE user_id = ($1) AND status = ($2)";
                         return [4 /*yield*/, database_1.default.query(sql, [userID, "open"])];
-                    case 2:
+                    case 3:
                         res = _a.sent();
                         conn.release();
                         return [2 /*return*/, res.rows];
-                    case 3:
+                    case 4:
                         err_2 = _a.sent();
-                        throw new Error("could not get orders");
-                    case 4: return [2 /*return*/];
+                        throw new Error("could not get orders, ".concat(err_2));
+                    case 5: return [2 /*return*/];
                 }
             });
         });
     };
     OrderStore.prototype.getClosedOrdersByUser = function (userID) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, sql, res, err_3;
+            var conn, sqlUsers, users, sql, res, err_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
+                        _a.trys.push([0, 4, , 5]);
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
+                        sqlUsers = "SELECT * FROM users WHERE id=($1)";
+                        return [4 /*yield*/, conn.query(sqlUsers, [userID])];
+                    case 2:
+                        users = _a.sent();
+                        if (users.rowCount === 0) {
+                            throw new Error("you should provide existing user_id");
+                        }
                         sql = "SELECT * FROM orders WHERE user_id = ($1) AND status = ($2)";
                         return [4 /*yield*/, database_1.default.query(sql, [userID, "close"])];
-                    case 2:
+                    case 3:
                         res = _a.sent();
                         conn.release();
                         return [2 /*return*/, res.rows];
-                    case 3:
+                    case 4:
                         err_3 = _a.sent();
-                        throw new Error("could not get orders");
-                    case 4: return [2 /*return*/];
+                        throw new Error("could not get orders, ".concat(err_3));
+                    case 5: return [2 /*return*/];
                 }
             });
         });
     };
     OrderStore.prototype.getOrderProducts = function (orderID) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, sql, res, err_4;
+            var conn, sqlOrders, orders, sql, res, err_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
+                        _a.trys.push([0, 4, , 5]);
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = "SELECT name,quantity,price FROM products INNER JOIN ordered_products ON products.id = ordered_products.product_id WHERE order_id=($1)";
-                        return [4 /*yield*/, conn.query(sql, [orderID])];
+                        sqlOrders = "SELECT * FROM orders WHERE id=($1)";
+                        return [4 /*yield*/, conn.query(sqlOrders, [orderID])];
                     case 2:
+                        orders = _a.sent();
+                        if (orders.rowCount === 0) {
+                            throw new Error("you should provide existing order_id");
+                        }
+                        sql = "SELECT name,quantity,price FROM products INNER JOIN ordered_products ON products.id = ordered_products.product_id WHERE order_id=($1)";
+                        return [4 /*yield*/, conn.query(sql, [
+                                orderID,
+                            ])];
+                    case 3:
                         res = _a.sent();
                         return [2 /*return*/, res.rows];
-                    case 3:
+                    case 4:
                         err_4 = _a.sent();
-                        throw new Error("could not get products");
-                    case 4: return [2 /*return*/];
+                        throw new Error("could not get products, ".concat(err_4));
+                    case 5: return [2 /*return*/];
                 }
             });
         });
@@ -165,31 +188,7 @@ var OrderStore = /** @class */ (function () {
     };
     OrderStore.prototype.closeOrder = function (orderID) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, sql, res, err_6;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 3, , 4]);
-                        return [4 /*yield*/, database_1.default.connect()];
-                    case 1:
-                        conn = _a.sent();
-                        sql = "UPDATE orders SET status=($1) WHERE id=($2)";
-                        return [4 /*yield*/, conn.query(sql, ["close", orderID])];
-                    case 2:
-                        res = _a.sent();
-                        conn.release();
-                        return [2 /*return*/, res.rows[0]];
-                    case 3:
-                        err_6 = _a.sent();
-                        throw new Error("could not create new Order. ".concat(err_6));
-                    case 4: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    OrderStore.prototype.addProduct = function (quantity, orderID, productID) {
-        return __awaiter(this, void 0, void 0, function () {
-            var conn, sqlOrder, resOrder, order, sql, res, err_7;
+            var conn, sqlOrder, order, sql, res, err_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -198,11 +197,50 @@ var OrderStore = /** @class */ (function () {
                     case 1:
                         conn = _a.sent();
                         sqlOrder = "SELECT * FROM orders WHERE id=($1)";
-                        return [4 /*yield*/, conn.query(sqlOrder, [
-                                orderID,
-                            ])];
+                        return [4 /*yield*/, conn.query(sqlOrder, [orderID])];
+                    case 2:
+                        order = _a.sent();
+                        if (order.rowCount === 0) {
+                            throw new Error("you should provide existing order_id");
+                        }
+                        sql = "UPDATE orders SET status=($1) WHERE id=($2)";
+                        return [4 /*yield*/, conn.query(sql, ["close", orderID])];
+                    case 3:
+                        res = _a.sent();
+                        conn.release();
+                        return [2 /*return*/, res.rows[0]];
+                    case 4:
+                        err_6 = _a.sent();
+                        throw new Error("could not close the order. ".concat(err_6));
+                    case 5: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    OrderStore.prototype.addProduct = function (quantity, orderID, productID) {
+        return __awaiter(this, void 0, void 0, function () {
+            var conn, sqlOrder, resOrder, sqlproduct, resProducst, order, sql, res, err_7;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 5, , 6]);
+                        return [4 /*yield*/, database_1.default.connect()];
+                    case 1:
+                        conn = _a.sent();
+                        sqlOrder = "SELECT * FROM orders WHERE id=($1)";
+                        return [4 /*yield*/, conn.query(sqlOrder, [orderID])];
                     case 2:
                         resOrder = _a.sent();
+                        if (resOrder.rowCount === 0) {
+                            throw new Error("you should provide existing order_id");
+                        }
+                        sqlproduct = "SELECT * FROM products WHERE id=($1)";
+                        return [4 /*yield*/, conn.query(sqlproduct, [productID])];
+                    case 3:
+                        resProducst = _a.sent();
+                        if (resProducst.rowCount === 0) {
+                            throw new Error("you should provide existing product_id");
+                        }
                         order = resOrder.rows[0];
                         if (order.status !== "open") {
                             throw new Error("Order is compelete");
@@ -213,14 +251,14 @@ var OrderStore = /** @class */ (function () {
                                 productID,
                                 quantity,
                             ])];
-                    case 3:
+                    case 4:
                         res = _a.sent();
                         conn.release();
                         return [2 /*return*/, res.rows[0]];
-                    case 4:
+                    case 5:
                         err_7 = _a.sent();
                         throw new Error("could not add product. ".concat(err_7));
-                    case 5: return [2 /*return*/];
+                    case 6: return [2 /*return*/];
                 }
             });
         });

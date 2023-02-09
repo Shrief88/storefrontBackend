@@ -26,6 +26,7 @@ describe("testing users endpoint response", () => {
     const conn = await clinet.connect();
     const sql = "DELETE FROM users";
     await conn.query(sql);
+    await conn.query("ALTER SEQUENCE users_id_seq RESTART WITH 1");
     conn.release();
   });
 
@@ -50,7 +51,7 @@ describe("testing users endpoint response", () => {
     });
 
     it("should return ok response if user enter a valid token", async () => {
-      const response = await request.get("/users/2").set({
+      const response = await request.get("/users/1").set({
         Authorization: `Bearer ${token}`,
       });
       expect(response.status).toBe(200);

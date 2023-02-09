@@ -72,19 +72,23 @@ describe("testing products endpoint response", function () {
         });
     }); });
     afterAll(function () { return __awaiter(void 0, void 0, void 0, function () {
-        var conn, sql;
+        var conn;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, database_1.default.connect()];
                 case 1:
                     conn = _a.sent();
-                    sql = "DELETE FROM users";
-                    return [4 /*yield*/, conn.query(sql)];
+                    return [4 /*yield*/, conn.query("DELETE FROM users")];
                 case 2:
                     _a.sent();
-                    sql = "DELETE FROM products";
-                    return [4 /*yield*/, conn.query(sql)];
+                    return [4 /*yield*/, conn.query("DELETE FROM products")];
                 case 3:
+                    _a.sent();
+                    return [4 /*yield*/, conn.query("ALTER SEQUENCE users_id_seq RESTART WITH 1")];
+                case 4:
+                    _a.sent();
+                    return [4 /*yield*/, conn.query("ALTER SEQUENCE products_id_seq RESTART WITH 1")];
+                case 5:
                     _a.sent();
                     conn.release();
                     return [2 /*return*/];

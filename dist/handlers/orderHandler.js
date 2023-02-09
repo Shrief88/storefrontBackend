@@ -62,15 +62,13 @@ var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, func
     });
 }); };
 var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var products, order, newOrder, err_2;
+    var order, newOrder, err_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                products = [];
                 order = {
                     status: "open",
                     user_id: req.body.user_id,
-                    products: products,
                 };
                 _a.label = 1;
             case 1:
@@ -97,7 +95,7 @@ var getActiveOrdersByUser = function (req, res) { return __awaiter(void 0, void 
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, store.getActiveOrdersByUser(userID)];
+                return [4 /*yield*/, store.getActiveOrdersByUser(parseInt(userID))];
             case 2:
                 orders = _a.sent();
                 res.json(orders);
@@ -119,7 +117,7 @@ var getClosedOrdersByUser = function (req, res) { return __awaiter(void 0, void 
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, store.getClosedOrdersByUser(userID)];
+                return [4 /*yield*/, store.getClosedOrdersByUser(parseInt(userID))];
             case 2:
                 orders = _a.sent();
                 res.json(orders);
@@ -137,7 +135,7 @@ var showProducts = function (req, res) { return __awaiter(void 0, void 0, void 0
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                orderID = req.params.orderID;
+                orderID = parseInt(req.params.orderID);
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);

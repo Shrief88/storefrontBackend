@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var database_1 = __importDefault(require("../../database"));
 var productModel_1 = require("../../models/productModel");
 var store = new productModel_1.ProductStore();
-describe("product model", function () {
+xdescribe("product model", function () {
     var newProduct;
     beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -68,6 +68,9 @@ describe("product model", function () {
                     sql = "DELETE FROM products";
                     return [4 /*yield*/, conn.query(sql)];
                 case 2:
+                    _a.sent();
+                    return [4 /*yield*/, conn.query("ALTER SEQUENCE products_id_seq RESTART WITH 1")];
+                case 3:
                     _a.sent();
                     conn.release();
                     return [2 /*return*/];
@@ -152,7 +155,7 @@ describe("product model", function () {
                 var result;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, store.show(newProduct.id)];
+                        case 0: return [4 /*yield*/, store.show(1)];
                         case 1:
                             result = _a.sent();
                             expect(result).toEqual({
@@ -174,7 +177,7 @@ describe("product model", function () {
                             _a.label = 1;
                         case 1:
                             _a.trys.push([1, 3, , 4]);
-                            return [4 /*yield*/, store.show(newProduct.id + 1)];
+                            return [4 /*yield*/, store.show(2)];
                         case 2:
                             _a.sent();
                             return [3 /*break*/, 4];

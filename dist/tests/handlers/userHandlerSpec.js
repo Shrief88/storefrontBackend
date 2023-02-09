@@ -82,6 +82,9 @@ describe("testing users endpoint response", function () {
                     return [4 /*yield*/, conn.query(sql)];
                 case 2:
                     _a.sent();
+                    return [4 /*yield*/, conn.query("ALTER SEQUENCE users_id_seq RESTART WITH 1")];
+                case 3:
+                    _a.sent();
                     conn.release();
                     return [2 /*return*/];
             }
@@ -132,7 +135,7 @@ describe("testing users endpoint response", function () {
             var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, request.get("/users/2").set({
+                    case 0: return [4 /*yield*/, request.get("/users/1").set({
                             Authorization: "Bearer ".concat(token),
                         })];
                     case 1:

@@ -1,6 +1,6 @@
 import supertest from "supertest";
 import app from "../..";
-import clinet from "../../database";
+import client from "../../database";
 import { UserStore } from "../../models/userModel";
 
 const request = supertest(app);
@@ -23,11 +23,11 @@ describe("testing products endpoint response", () => {
   });
 
   afterAll(async () => {
-    const conn = await clinet.connect();
-    let sql: string = "DELETE FROM users";
-    await conn.query(sql);
-    sql = "DELETE FROM products";
-    await conn.query(sql);
+    const conn = await client.connect();
+    await conn.query("DELETE FROM users");
+    await conn.query("DELETE FROM products");
+    await conn.query("ALTER SEQUENCE users_id_seq RESTART WITH 1");
+    await conn.query("ALTER SEQUENCE products_id_seq RESTART WITH 1");
     conn.release();
   });
 

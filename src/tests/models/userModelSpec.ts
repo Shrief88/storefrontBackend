@@ -1,6 +1,6 @@
 import { type User, UserStore } from "../../models/userModel";
 import { validatePassword } from "../../utilities/bycrypt";
-import clinet from "../../database";
+import client from "../../database";
 
 const store = new UserStore();
 
@@ -16,9 +16,9 @@ describe("user model", () => {
   });
 
   afterAll(async () => {
-    const conn = await clinet.connect();
-    const sql = "DELETE FROM users";
-    await conn.query(sql);
+    const conn = await client.connect();
+    await conn.query("DELETE FROM users");
+    await conn.query("ALTER SEQUENCE users_id_seq RESTART WITH 1");
     conn.release();
   });
 
@@ -87,7 +87,7 @@ describe("user model", () => {
 
     describe("show method", () => {
       it("should return the right user", async () => {
-        const result = await store.show(newUser.id as number);
+        const result = await store.show(1);
         expect(result).toEqual({
           id: result.id,
           email: "shriefessam1999@gmail.com",
@@ -100,7 +100,7 @@ describe("user model", () => {
       it("should throw an error if user enter not existing id", async () => {
         let errMessage: string = "";
         try {
-          await store.show((newUser.id as number) + 1);
+          await store.show(2);
         } catch (err) {
           errMessage = err.message;
         }

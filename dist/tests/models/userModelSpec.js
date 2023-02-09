@@ -61,15 +61,17 @@ describe("user model", function () {
         });
     }); });
     afterAll(function () { return __awaiter(void 0, void 0, void 0, function () {
-        var conn, sql;
+        var conn;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, database_1.default.connect()];
                 case 1:
                     conn = _a.sent();
-                    sql = "DELETE FROM users";
-                    return [4 /*yield*/, conn.query(sql)];
+                    return [4 /*yield*/, conn.query("DELETE FROM users")];
                 case 2:
+                    _a.sent();
+                    return [4 /*yield*/, conn.query("ALTER SEQUENCE users_id_seq RESTART WITH 1")];
+                case 3:
                     _a.sent();
                     conn.release();
                     return [2 /*return*/];
@@ -160,7 +162,7 @@ describe("user model", function () {
                 var result;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, store.show(newUser.id)];
+                        case 0: return [4 /*yield*/, store.show(1)];
                         case 1:
                             result = _a.sent();
                             expect(result).toEqual({
@@ -183,7 +185,7 @@ describe("user model", function () {
                             _a.label = 1;
                         case 1:
                             _a.trys.push([1, 3, , 4]);
-                            return [4 /*yield*/, store.show(newUser.id + 1)];
+                            return [4 /*yield*/, store.show(2)];
                         case 2:
                             _a.sent();
                             return [3 /*break*/, 4];

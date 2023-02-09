@@ -1,4 +1,4 @@
-import clinet from "../../database";
+import client from "../../database";
 import { type Product, ProductStore } from "../../models/productModel";
 
 const store = new ProductStore();
@@ -14,9 +14,10 @@ describe("product model", () => {
   });
 
   afterAll(async () => {
-    const conn = await clinet.connect();
+    const conn = await client.connect();
     const sql = "DELETE FROM products";
     await conn.query(sql);
+    await conn.query("ALTER SEQUENCE products_id_seq RESTART WITH 1");
     conn.release();
   });
 
@@ -49,6 +50,7 @@ describe("product model", () => {
         ]);
       });
     });
+
     describe("create method", () => {
       it("create method should add a product", () => {
         expect(newProduct).toEqual({
@@ -78,7 +80,7 @@ describe("product model", () => {
 
     describe("show method", () => {
       it("should return the right product", async () => {
-        const result = await store.show(newProduct.id as number);
+        const result = await store.show(1);
         expect(result).toEqual({
           id: newProduct.id,
           name: "mobile",
@@ -90,7 +92,7 @@ describe("product model", () => {
       it("should throw an error if user enter not existing id", async () => {
         let errMessage: string = "";
         try {
-          await store.show((newProduct.id as number) + 1);
+          await store.show(2);
         } catch (err) {
           errMessage = err.message;
         }

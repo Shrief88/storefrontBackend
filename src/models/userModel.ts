@@ -1,4 +1,4 @@
-import clinet from "../database";
+import client from "../database";
 import { type QueryResult } from "pg";
 import { hashPassword, validatePassword } from "../utilities/bycrypt";
 
@@ -13,7 +13,7 @@ export interface User {
 export class UserStore {
   async index(): Promise<User[]> {
     try {
-      const conn = await clinet.connect();
+      const conn = await client.connect();
       const sql = "SELECT * FROM users";
       const res = await conn.query(sql);
       conn.release();
@@ -25,7 +25,7 @@ export class UserStore {
 
   async show(id: number): Promise<User> {
     try {
-      const conn = await clinet.connect();
+      const conn = await client.connect();
       const sql = "SELECT * FROM users WHERE id = ($1)";
       const res = await conn.query(sql, [id]);
       conn.release();
@@ -41,7 +41,7 @@ export class UserStore {
 
   async create(user: User): Promise<User> {
     try {
-      const conn = await clinet.connect();
+      const conn = await client.connect();
       const sqlUsers = "SELECT * FROM users WHERE email=$1";
       let res: QueryResult<User> = await conn.query(sqlUsers, [user.email]);
       if (res.rowCount !== 0) {
@@ -65,7 +65,7 @@ export class UserStore {
 
   async authenticate(email: string, password: string): Promise<User> {
     try {
-      const conn = await clinet.connect();
+      const conn = await client.connect();
       const sql = "SELECT * FROM users WHERE email=$1";
       const res = await conn.query(sql, [email]);
       if (res.rowCount === 0) {

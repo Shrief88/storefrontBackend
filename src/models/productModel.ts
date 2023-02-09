@@ -1,5 +1,5 @@
 import { type QueryResult } from "pg";
-import clinet from "../database";
+import client from "../database";
 
 export interface Product {
   id?: number;
@@ -11,7 +11,7 @@ export interface Product {
 export class ProductStore {
   async index(): Promise<Product[]> {
     try {
-      const conn = await clinet.connect();
+      const conn = await client.connect();
       const sql = "SELECT * FROM products";
       const res = await conn.query(sql);
       conn.release();
@@ -23,7 +23,7 @@ export class ProductStore {
 
   async show(id: number): Promise<Product> {
     try {
-      const conn = await clinet.connect();
+      const conn = await client.connect();
       const sql = "SELECT * FROM products WHERE id = ($1)";
       const res = await conn.query(sql, [id]);
       conn.release();
@@ -39,7 +39,7 @@ export class ProductStore {
 
   async create(product: Product): Promise<Product> {
     try {
-      const conn = await clinet.connect();
+      const conn = await client.connect();
       let sql: string = "SELECT * FROM products WHERE name=$1";
       let res: QueryResult<Product> = await conn.query(sql, [product.name]);
       if (res.rowCount !== 0) {
@@ -61,7 +61,7 @@ export class ProductStore {
 
   async getOrderByCategory(category: string): Promise<Product[]> {
     try {
-      const conn = await clinet.connect();
+      const conn = await client.connect();
       const sql = "SELECT * FROM products WHERE category=($1)";
       const res = await conn.query(sql, [category]);
       conn.release();
@@ -73,7 +73,7 @@ export class ProductStore {
 
   async getTopFive(): Promise<Product[]> {
     try {
-      const conn = await clinet.connect();
+      const conn = await client.connect();
       const sql =
         "(SELECT name product_id,COUNT(product_id) CN FROM products INNER JOIN ordered_products ON products.id = ordered_products.product_id GROUP BY name) ORDER BY CN DESC LIMIT 5";
       const res = await conn.query(sql);

@@ -1,12 +1,10 @@
 import { type QueryResult } from "pg";
-import clinet from "../database";
-import { type Product } from "./productModel";
+import client from "../database";
 
 export interface Order {
   id?: number;
   status: string;
   user_id: number;
-  products: Product[];
 }
 
 export interface OrderedProduct {
@@ -16,12 +14,18 @@ export interface OrderedProduct {
   quantity: number;
 }
 
+export interface OrderedProductInfo {
+  name: string;
+  quantity: number;
+  price: number;
+}
+
 export class OrderStore {
   async index(): Promise<Order[]> {
     try {
-      const conn = await clinet.connect();
+      const conn = await client.connect();
       const sql = "SELECT * FROM orders";
-      const res = await clinet.query(sql);
+      const res = await client.query(sql);
       conn.release();
       return res.rows;
     } catch (err) {
@@ -29,45 +33,62 @@ export class OrderStore {
     }
   }
 
-  async getActiveOrdersByUser(userID: string): Promise<Order[]> {
+  async getActiveOrdersByUser(userID: number): Promise<Order[]> {
     try {
-      const conn = await clinet.connect();
+      const conn = await client.connect();
+      const sqlUsers = "SELECT * FROM users WHERE id=($1)";
+      const users = await conn.query(sqlUsers, [userID]);
+      if (users.rowCount === 0) {
+        throw new Error("you should provide existing user_id");
+      }
       const sql = "SELECT * FROM orders WHERE user_id = ($1) AND status = ($2)";
-      const res = await clinet.query(sql, [userID, "open"]);
+      const res = await client.query(sql, [userID, "open"]);
       conn.release();
       return res.rows;
     } catch (err) {
-      throw new Error(`could not get orders`);
+      throw new Error(`could not get orders, ${err}`);
     }
   }
 
-  async getClosedOrdersByUser(userID: string): Promise<Order[]> {
+  async getClosedOrdersByUser(userID: number): Promise<Order[]> {
     try {
-      const conn = await clinet.connect();
+      const conn = await client.connect();
+      const sqlUsers = "SELECT * FROM users WHERE id=($1)";
+      const users = await conn.query(sqlUsers, [userID]);
+      if (users.rowCount === 0) {
+        throw new Error("you should provide existing user_id");
+      }
       const sql = "SELECT * FROM orders WHERE user_id = ($1) AND status = ($2)";
-      const res = await clinet.query(sql, [userID, "close"]);
+      const res = await client.query(sql, [userID, "close"]);
       conn.release();
       return res.rows;
     } catch (err) {
-      throw new Error(`could not get orders`);
+      throw new Error(`could not get orders, ${err}`);
     }
   }
 
-  async getOrderProducts(orderID: string): Promise<Product[]> {
+  async getOrderProducts(orderID: number): Promise<OrderedProductInfo[]> {
     try {
-      const conn = await clinet.connect();
+      const conn = await client.connect();
+      const sqlOrders = "SELECT * FROM orders WHERE id=($1)";
+      const orders = await conn.query(sqlOrders, [orderID]);
+      if (orders.rowCount === 0) {
+        throw new Error("you should provide existing order_id");
+      }
       const sql =
         "SELECT name,quantity,price FROM products INNER JOIN ordered_products ON products.id = ordered_products.product_id WHERE order_id=($1)";
-      const res: QueryResult<Product> = await conn.query(sql, [orderID]);
+      const res: QueryResult<OrderedProductInfo> = await conn.query(sql, [
+        orderID,
+      ]);
       return res.rows;
     } catch (err) {
-      throw new Error(`could not get products`);
+      throw new Error(`could not get products, ${err}`);
     }
   }
 
   async create(order: Order): Promise<Order> {
     try {
-      const conn = await clinet.connect();
+      const conn = await client.connect();
       const sql =
         "INSERT INTO orders (status,user_id) VALUES ($1,$2) RETURNING *";
       const res = await conn.query(sql, [order.status, order.user_id]);
@@ -80,13 +101,18 @@ export class OrderStore {
 
   async closeOrder(orderID: number): Promise<Order> {
     try {
-      const conn = await clinet.connect();
+      const conn = await client.connect();
+      const sqlOrder = "SELECT * FROM orders WHERE id=($1)";
+      const order = await conn.query(sqlOrder, [orderID]);
+      if (order.rowCount === 0) {
+        throw new Error("you should provide existing order_id");
+      }
       const sql = "UPDATE orders SET status=($1) WHERE id=($2)";
       const res = await conn.query(sql, ["close", orderID]);
       conn.release();
       return res.rows[0];
     } catch (err) {
-      throw new Error(`could not create new Order. ${err}`);
+      throw new Error(`could not close the order. ${err}`);
     }
   }
 
@@ -96,11 +122,17 @@ export class OrderStore {
     productID: number
   ): Promise<OrderedProduct> {
     try {
-      const conn = await clinet.connect();
+      const conn = await client.connect();
       const sqlOrder = "SELECT * FROM orders WHERE id=($1)";
-      const resOrder: QueryResult<Order> = await conn.query(sqlOrder, [
-        orderID,
-      ]);
+      const resOrder = await conn.query(sqlOrder, [orderID]);
+      if (resOrder.rowCount === 0) {
+        throw new Error("you should provide existing order_id");
+      }
+      const sqlproduct = "SELECT * FROM products WHERE id=($1)";
+      const resProducst = await conn.query(sqlproduct, [productID]);
+      if (resProducst.rowCount === 0) {
+        throw new Error("you should provide existing product_id");
+      }
       const order = resOrder.rows[0];
       if (order.status !== "open") {
         throw new Error("Order is compelete");

@@ -1,7 +1,6 @@
 import { type RequestHandler, type Request, type Response } from "express";
 import type express from "express";
 import { type Order, OrderStore } from "../models/orderModel";
-import { type Product } from "../models/productModel";
 import verifyAuthToken from "../middlewares/verifyAuthToken";
 
 const store = new OrderStore();
@@ -16,11 +15,9 @@ const index = async (_req: Request, res: Response): Promise<void> => {
 };
 
 const create = async (req: Request, res: Response): Promise<void> => {
-  const products: Product[] = [];
   const order: Order = {
     status: "open",
     user_id: req.body.user_id,
-    products,
   };
   try {
     const newOrder = await store.create(order);
@@ -36,7 +33,7 @@ const getActiveOrdersByUser = async (
 ): Promise<void> => {
   const userID = req.params.userID;
   try {
-    const orders = await store.getActiveOrdersByUser(userID);
+    const orders = await store.getActiveOrdersByUser(parseInt(userID));
     res.json(orders);
   } catch (err) {
     res.status(400).json({ err: err.message });
@@ -49,7 +46,7 @@ const getClosedOrdersByUser = async (
 ): Promise<void> => {
   const userID = req.params.userID;
   try {
-    const orders = await store.getClosedOrdersByUser(userID);
+    const orders = await store.getClosedOrdersByUser(parseInt(userID));
     res.json(orders);
   } catch (err) {
     res.status(400).json({ err: err.message });
@@ -57,7 +54,7 @@ const getClosedOrdersByUser = async (
 };
 
 const showProducts = async (req: Request, res: Response): Promise<void> => {
-  const orderID = req.params.orderID;
+  const orderID = parseInt(req.params.orderID);
   try {
     const products = await store.getOrderProducts(orderID);
     res.json(products);
