@@ -66,132 +66,82 @@ describe("testing users endpoint response", () => {
   });
 
   describe("test [POST] /users endpoint", () => {
-    it("should return an error if user try to access without token", async () => {
+    it("should return ok response", async () => {
       const response = await request.post("/users").send({
         email: "shriefessam1888@gmail.com",
         password: "Sh00000000",
         first_name: "Shrief",
         last_name: "Essam",
       });
-      expect(response.status).toBe(401);
-    });
-
-    it("should return ok response if user enter a valid token", async () => {
-      const response = await request
-        .post("/users")
-        .send({
-          email: "shriefessam1888@gmail.com",
-          password: "Sh00000000",
-          first_name: "Shrief",
-          last_name: "Essam",
-        })
-        .set({
-          Authorization: `Bearer ${token}`,
-        });
       expect(response.status).toBe(200);
     });
 
     it("should return 400 response if any required attribute is missing", async () => {
-      const response = await request
-        .post("/users")
-        .send({
-          password: "Sh00000000",
-          first_name: "Shrief",
-          last_name: "Essam",
-        })
-        .set({
-          Authorization: `Bearer ${token}`,
-        });
+      const response = await request.post("/users").send({
+        password: "Sh00000000",
+        first_name: "Shrief",
+        last_name: "Essam",
+      });
       expect(response.status).toBe(400);
     });
 
     it("should return 400 response if any attribute is empty", async () => {
-      const response = await request
-        .post("/users")
-        .send({
-          email: "shriefessam1888@gmail.com",
-          password: "Sh00000000",
-          first_name: "",
-          last_name: "Essam",
-        })
-        .set({
-          Authorization: `Bearer ${token}`,
-        });
+      const response = await request.post("/users").send({
+        email: "shriefessam1888@gmail.com",
+        password: "Sh00000000",
+        first_name: "",
+        last_name: "Essam",
+      });
       expect(response.status).toBe(400);
     });
 
     it("should return 400 response if any string attribute is a number", async () => {
-      const response = await request
-        .post("/users")
-        .send({
-          email: "shriefessam1888@gmail.com",
-          password: "Sh00000000",
-          first_name: "",
-          last_name: "Essam",
-        })
-        .set({
-          Authorization: `Bearer ${token}`,
-        });
+      const response = await request.post("/users").send({
+        email: "shriefessam1888@gmail.com",
+        password: "Sh00000000",
+        first_name: "",
+        last_name: "Essam",
+      });
       expect(response.status).toBe(400);
     });
 
     it("should return 400 response if email is unvalid", async () => {
-      const response = await request
-        .post("/users")
-        .send({
-          email: "shriefessam1888",
-          password: "Sh00000000",
-          first_name: "shrief",
-          last_name: "Essam",
-        })
-        .set({
-          Authorization: `Bearer ${token}`,
-        });
+      const response = await request.post("/users").send({
+        email: "shriefessam1888",
+        password: "Sh00000000",
+        first_name: "shrief",
+        last_name: "Essam",
+      });
       expect(response.status).toBe(400);
     });
 
     it("should return 400 response if password contains numbers only", async () => {
-      const response = await request
-        .post("/users")
-        .send({
-          email: "shriefessam1888",
-          password: "123456789",
-          first_name: "shrief",
-          last_name: "Essam",
-        })
-        .set({
-          Authorization: `Bearer ${token}`,
-        });
+      const response = await request.post("/users").send({
+        email: "shriefessam1888",
+        password: "123456789",
+        first_name: "shrief",
+        last_name: "Essam",
+      });
       expect(response.status).toBe(400);
     });
 
     it("should return 400 response if password contains letters only", async () => {
-      const response = await request
-        .post("/users")
-        .send({
-          email: "shriefessam1888",
-          password: "password",
-          first_name: "shrief",
-          last_name: "Essam",
-        })
-        .set({
-          Authorization: `Bearer ${token}`,
-        });
+      const response = await request.post("/users").send({
+        email: "shriefessam1888",
+        password: "password",
+        first_name: "shrief",
+        last_name: "Essam",
+      });
       expect(response.status).toBe(400);
     });
 
     it("should return 400 response if password less than 8 characters", async () => {
-      const response = await request
-        .post("/users")
-        .send({
-          email: "shriefessam1888",
-          password: "pass123",
-          first_name: "shrief",
-          last_name: "Essam",
-        })
-        .set({
-          Authorization: `Bearer ${token}`,
-        });
+      const response = await request.post("/users").send({
+        email: "shriefessam1888",
+        password: "pass123",
+        first_name: "shrief",
+        last_name: "Essam",
+      });
       expect(response.status).toBe(400);
     });
   });

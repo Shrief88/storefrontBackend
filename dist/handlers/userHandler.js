@@ -146,7 +146,7 @@ var authenticate = function (req, res) { return __awaiter(void 0, void 0, void 0
 }); };
 var userRoutes = function (app) {
     app.get("/users", verifyAuthToken_1.default, index);
-    app.post("/users", verifyAuthToken_1.default, create);
+    app.post("/users", create);
     app.get("/users/:id", verifyAuthToken_1.default, show);
     app.post("/users/authentiacate", authenticate);
 };

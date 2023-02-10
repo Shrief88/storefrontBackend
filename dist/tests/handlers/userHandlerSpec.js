@@ -161,7 +161,7 @@ describe("testing users endpoint response", function () {
         }); });
     });
     describe("test [POST] /users endpoint", function () {
-        it("should return an error if user try to access without token", function () { return __awaiter(void 0, void 0, void 0, function () {
+        it("should return ok response", function () { return __awaiter(void 0, void 0, void 0, function () {
             var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -170,28 +170,6 @@ describe("testing users endpoint response", function () {
                             password: "Sh00000000",
                             first_name: "Shrief",
                             last_name: "Essam",
-                        })];
-                    case 1:
-                        response = _a.sent();
-                        expect(response.status).toBe(401);
-                        return [2 /*return*/];
-                }
-            });
-        }); });
-        it("should return ok response if user enter a valid token", function () { return __awaiter(void 0, void 0, void 0, function () {
-            var response;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, request
-                            .post("/users")
-                            .send({
-                            email: "shriefessam1888@gmail.com",
-                            password: "Sh00000000",
-                            first_name: "Shrief",
-                            last_name: "Essam",
-                        })
-                            .set({
-                            Authorization: "Bearer ".concat(token),
                         })];
                     case 1:
                         response = _a.sent();
@@ -204,15 +182,10 @@ describe("testing users endpoint response", function () {
             var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, request
-                            .post("/users")
-                            .send({
+                    case 0: return [4 /*yield*/, request.post("/users").send({
                             password: "Sh00000000",
                             first_name: "Shrief",
                             last_name: "Essam",
-                        })
-                            .set({
-                            Authorization: "Bearer ".concat(token),
                         })];
                     case 1:
                         response = _a.sent();
@@ -225,16 +198,11 @@ describe("testing users endpoint response", function () {
             var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, request
-                            .post("/users")
-                            .send({
+                    case 0: return [4 /*yield*/, request.post("/users").send({
                             email: "shriefessam1888@gmail.com",
                             password: "Sh00000000",
                             first_name: "",
                             last_name: "Essam",
-                        })
-                            .set({
-                            Authorization: "Bearer ".concat(token),
                         })];
                     case 1:
                         response = _a.sent();
@@ -247,16 +215,11 @@ describe("testing users endpoint response", function () {
             var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, request
-                            .post("/users")
-                            .send({
+                    case 0: return [4 /*yield*/, request.post("/users").send({
                             email: "shriefessam1888@gmail.com",
                             password: "Sh00000000",
                             first_name: "",
                             last_name: "Essam",
-                        })
-                            .set({
-                            Authorization: "Bearer ".concat(token),
                         })];
                     case 1:
                         response = _a.sent();
@@ -269,16 +232,11 @@ describe("testing users endpoint response", function () {
             var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, request
-                            .post("/users")
-                            .send({
+                    case 0: return [4 /*yield*/, request.post("/users").send({
                             email: "shriefessam1888",
                             password: "Sh00000000",
                             first_name: "shrief",
                             last_name: "Essam",
-                        })
-                            .set({
-                            Authorization: "Bearer ".concat(token),
                         })];
                     case 1:
                         response = _a.sent();
@@ -291,16 +249,11 @@ describe("testing users endpoint response", function () {
             var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, request
-                            .post("/users")
-                            .send({
+                    case 0: return [4 /*yield*/, request.post("/users").send({
                             email: "shriefessam1888",
                             password: "123456789",
                             first_name: "shrief",
                             last_name: "Essam",
-                        })
-                            .set({
-                            Authorization: "Bearer ".concat(token),
                         })];
                     case 1:
                         response = _a.sent();
@@ -313,16 +266,11 @@ describe("testing users endpoint response", function () {
             var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, request
-                            .post("/users")
-                            .send({
+                    case 0: return [4 /*yield*/, request.post("/users").send({
                             email: "shriefessam1888",
                             password: "password",
                             first_name: "shrief",
                             last_name: "Essam",
-                        })
-                            .set({
-                            Authorization: "Bearer ".concat(token),
                         })];
                     case 1:
                         response = _a.sent();
@@ -335,16 +283,11 @@ describe("testing users endpoint response", function () {
             var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, request
-                            .post("/users")
-                            .send({
+                    case 0: return [4 /*yield*/, request.post("/users").send({
                             email: "shriefessam1888",
                             password: "pass123",
                             first_name: "shrief",
                             last_name: "Essam",
-                        })
-                            .set({
-                            Authorization: "Bearer ".concat(token),
                         })];
                     case 1:
                         response = _a.sent();
