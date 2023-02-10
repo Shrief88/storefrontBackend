@@ -43,11 +43,10 @@ describe("user model", () => {
         const result = await store.index();
         expect(result).toEqual([
           {
-            id: newUser.id,
+            id: 1,
             email: "shriefessam1999@gmail.com",
             first_name: "Shrief",
             last_name: "Essam",
-            password: newUser.password,
           },
         ]);
       });
@@ -64,7 +63,9 @@ describe("user model", () => {
       });
 
       it("password should be hashed", () => {
-        expect(validatePassword("password123", newUser.password)).toBe(true);
+        expect(
+          validatePassword("password123", newUser.password as string)
+        ).toBe(true);
       });
 
       it("should throw an error if email already exist", async () => {

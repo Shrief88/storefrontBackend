@@ -55,7 +55,7 @@ var UserStore = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = "SELECT * FROM users";
+                        sql = "SELECT id,email,first_name,last_name FROM users";
                         return [4 /*yield*/, conn.query(sql)];
                     case 2:
                         res = _a.sent();

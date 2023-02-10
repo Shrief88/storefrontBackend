@@ -7,14 +7,14 @@ export interface User {
   email: string;
   first_name: string;
   last_name: string;
-  password: string;
+  password?: string;
 }
 
 export class UserStore {
   async index(): Promise<User[]> {
     try {
       const conn = await client.connect();
-      const sql = "SELECT * FROM users";
+      const sql = "SELECT id,email,first_name,last_name FROM users";
       const res = await conn.query(sql);
       conn.release();
       return res.rows;
@@ -49,7 +49,7 @@ export class UserStore {
       }
       const sql =
         "INSERT INTO users (email,first_name,last_name,password) VALUES ($1,$2,$3,$4) RETURNING *";
-      const hash = hashPassword(user.password);
+      const hash = hashPassword(user.password as string);
       res = await conn.query(sql, [
         user.email,
         user.first_name,

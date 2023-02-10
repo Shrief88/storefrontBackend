@@ -103,11 +103,10 @@ describe("user model", function () {
                             result = _a.sent();
                             expect(result).toEqual([
                                 {
-                                    id: newUser.id,
+                                    id: 1,
                                     email: "shriefessam1999@gmail.com",
                                     first_name: "Shrief",
                                     last_name: "Essam",
-                                    password: newUser.password,
                                 },
                             ]);
                             return [2 /*return*/];

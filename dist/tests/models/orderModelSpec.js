@@ -268,39 +268,6 @@ describe("order model", function () {
             }); });
         });
         describe("addProduct method", function () {
-            // it("should throw an error if orderID is not existing", async () => {
-            //   let errMessage: string = "";
-            //   try {
-            //     await orderStore.addProduct(5, 3, 1);
-            //   } catch (err) {
-            //     errMessage = err.message;
-            //   }
-            //   expect(errMessage).toEqual(
-            //     "could not add product. Error: you should provide existing order_id"
-            //   );
-            // });
-            // it("should throw an error if productID is not existing", async () => {
-            //   let errMessage: string = "";
-            //   try {
-            //     await orderStore.addProduct(5, 1, 2);
-            //   } catch (err) {
-            //     errMessage = err.message;
-            //   }
-            //   expect(errMessage).toEqual(
-            //     "could not add product. Error: you should provide existing product_id"
-            //   );
-            // });
-            // it("should throw an error if order is already closed", async () => {
-            //   let errMessage: string = "";
-            //   try {
-            //     await orderStore.addProduct(5, 2, 1);
-            //   } catch (err) {
-            //     errMessage = err.message;
-            //   }
-            //   expect(errMessage).toEqual(
-            //     "could not add product. Error: Order is compelete"
-            //   );
-            // });
             it("should add product to the right order", function () { return __awaiter(void 0, void 0, void 0, function () {
                 var products;
                 return __generator(this, function (_a) {
@@ -379,17 +346,6 @@ describe("order model", function () {
                     }
                 });
             }); });
-            // it("should throw an error if orderID is not existing", async () => {
-            //   let errMessage: string = "";
-            //   try {
-            //     await orderStore.closeOrder(3);
-            //   } catch (err) {
-            //     errMessage = err.message;
-            //   }
-            //   expect(errMessage).toEqual(
-            //     "could not close the order. Error: you should provide existing order_id"
-            //   );
-            // });
         });
     });
 });
