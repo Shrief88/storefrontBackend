@@ -350,32 +350,32 @@ These are the notes from a meeting with the frontend developer that describe wha
     name VARCHAR(100) NOT NULL,
     price FLOAT(10) NOT NULL,
     category VARCHAR(100) NOT NULL
- );
+  );
 ```
 ### User Schema
 ```sql
   CREATE TABLE users(
-      id SERIAL PRIMARY KEY,
-      email VARCHAR(100) UNIQUE,
-      first_Name VARCHAR(100) NOT NULL,
-      last_Name VARCHAR(100) NOT NULL,
-      password text NOT NULL
-  );
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(100) UNIQUE,
+    first_Name VARCHAR(100) NOT NULL,
+    last_Name VARCHAR(100) NOT NULL,
+    password text NOT NULL
+);
 ```
 ### Orders Schema
 ```sql
   CREATE TABLE orders(
-      id SERIAL PRIMARY KEY,
-      status VARCHAR(100) NOT NULL,
-      user_id bigint REFERENCES users(id)
+    id SERIAL PRIMARY KEY,
+    status VARCHAR(100) NOT NULL,
+    user_id bigint REFERENCES users(id)
   );
 ```
 ### Ordered_products Schema 
 ```sql
   CREATE TABLE ordered_products(
-      id SERIAL PRIMARY KEY,
-      quantity INTEGER NOT NULL,
-      order_id bigint REFERENCES orders(id),
-      product_id bigint REFERENCES products(id)
+    id SERIAL PRIMARY KEY,
+    quantity INTEGER NOT NULL,
+    order_id bigint REFERENCES orders(id),
+    product_id bigint REFERENCES products(id)
   );
 ```
