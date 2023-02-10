@@ -32,17 +32,17 @@ in terminal type
 ```
 then add the following in your .env file
 ```bash
-POSTGRES_HOST = '127.0.0.1'
-POSTGRES_PORT = 5432
-POSTGRES_DB = 'storefront'
-POSTGRES_TEST_DB = 'storefront_test' 
-POSTGRES_USER = 'shrief'
-POSTGRES_PASSWORD = 'Sh00000000'
-ENV = 'dev'
-TOKEN_SECRET= your-secret-token
-BCRYPT_PASSWORD= your-password
-SALT_ROUNDS= 10
-PORT=3030
+PORT =3030
+POSTGRES_HOST=localhost
+POSTGRES_DB=storefront
+POSTGRES_USER=storefront_user
+POSTGRES_TEST_DB=storefront_test
+POSTGRES_PASSWORD=password123
+ENV=dev
+TOKEN_SECRET=your-secret-token
+BCRYPT_PASSWORD=your-password
+SALT_ROUNDS=10
+POSTGRES_PORT=5432
 ```
 
 ## Building
